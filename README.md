@@ -2,6 +2,12 @@
 
 Aplicacion de demostracion desarrollada para el TFG: Verificacion forense de grabaciones de audio mediante IA: deteccion y localizacion de manipulaciones.
 
+## Demo online
+
+La aplicación puede probarse desde el siguiente enlace:
+
+https://tfg-audio-splicing-demo.streamlit.app
+
 La aplicacion permite seleccionar un audio del dataset generado, reproducirlo, visualizar su curva temporal de sospecha, mostrar el espectrograma y consultar los intervalos detectados como sospechosos por el modelo.
 
 ## Contenido de la carpeta
