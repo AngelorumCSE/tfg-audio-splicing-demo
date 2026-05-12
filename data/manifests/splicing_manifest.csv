@@ -1,0 +1,64 @@
+id_registro;archivo_generado;archivo_base;id_hablante_base;genero_base;manipulado;tipo_splicing;inicio_insercion_s;fin_insercion_s;archivo_segmento;id_hablante_segmento;inicio_segmento_s;fin_segmento_s;duracion_s;frecuencia_muestreo;semilla
+A001_clean;A001_Diapo_10_clean.wav;Diapo 10.wav;S01;H;0;none;;;;;;;31.849;16000;42
+A001_splice_mismo_audio;A001_Diapo_10_splice_mismo_audio.wav;Diapo 10.wav;S01;H;1;mismo_audio;9.209;11.168;Diapo 10.wav;S01;1.698;3.657;33.808;16000;42
+A001_splice_mismo_hablante;A001_Diapo_10_splice_mismo_hablante.wav;Diapo 10.wav;S01;H;1;mismo_hablante;23.108;24.318;Diapo 8 v2.wav;S01;6.655;7.865;33.059;16000;42
+A002_clean;A002_Diapo_7_clean.wav;Diapo 7.wav;S01;H;0;none;;;;;;;76.052;16000;42
+A002_splice_mismo_audio;A002_Diapo_7_splice_mismo_audio.wav;Diapo 7.wav;S01;H;1;mismo_audio;3.354;5.172;Diapo 7.wav;S01;43.654;45.472;77.87;16000;42
+A002_splice_mismo_hablante;A002_Diapo_7_splice_mismo_hablante.wav;Diapo 7.wav;S01;H;1;mismo_hablante;2.965;4.293;Diapo 10.wav;S01;15.413;16.741;77.38;16000;42
+A003_clean;A003_Diapo_8_v2_clean.wav;Diapo 8 v2.wav;S01;H;0;none;;;;;;;58.388;16000;42
+A003_splice_mismo_audio;A003_Diapo_8_v2_splice_mismo_audio.wav;Diapo 8 v2.wav;S01;H;1;mismo_audio;31.728;33.026;Diapo 8 v2.wav;S01;36.802;38.1;59.686;16000;42
+A003_splice_mismo_hablante;A003_Diapo_8_v2_splice_mismo_hablante.wav;Diapo 8 v2.wav;S01;H;1;mismo_hablante;50.018;51.692;Diapo 7.wav;S01;21.135;22.809;60.062;16000;42
+A004_clean;A004_Diapo_9_clean.wav;Diapo 9.wav;S01;H;0;none;;;;;;;29.289;16000;42
+A004_splice_mismo_audio;A004_Diapo_9_splice_mismo_audio.wav;Diapo 9.wav;S01;H;1;mismo_audio;12.533;14.671;Diapo 9.wav;S01;5.016;7.154;31.427;16000;42
+A004_splice_mismo_hablante;A004_Diapo_9_splice_mismo_hablante.wav;Diapo 9.wav;S01;H;1;mismo_hablante;10.185;11.419;Diapo 8 v2.wav;S01;53.795;55.028;30.523;16000;42
+A005_clean;A005_WhatsApp_Audio_2025-11-25_at_13.23.33_clean.wav;WhatsApp Audio 2025-11-25 at 13.23.33.wav;S02;H;0;none;;;;;;;33.233;16000;42
+A005_splice_mismo_audio;A005_WhatsApp_Audio_2025-11-25_at_13.23.33_splice_mismo_audio.wav;WhatsApp Audio 2025-11-25 at 13.23.33.wav;S02;H;1;mismo_audio;27.47;28.609;WhatsApp Audio 2025-11-25 at 13.23.33.wav;S02;3.911;5.05;34.373;16000;42
+A005_splice_mismo_hablante;A005_WhatsApp_Audio_2025-11-25_at_13.23.33_splice_mismo_hablante.wav;WhatsApp Audio 2025-11-25 at 13.23.33.wav;S02;H;1;mismo_hablante;15.349;16.746;WhatsApp Audio 2026-02-04 at 14.12.19.wav;S02;1.865;3.261;34.63;16000;42
+A006_clean;A006_WhatsApp_Audio_2025-11-27_at_10.32.19_clean.wav;WhatsApp Audio 2025-11-27 at 10.32.19.wav;S02;H;0;none;;;;;;;26.854;16000;42
+A006_splice_mismo_audio;A006_WhatsApp_Audio_2025-11-27_at_10.32.19_splice_mismo_audio.wav;WhatsApp Audio 2025-11-27 at 10.32.19.wav;S02;H;1;mismo_audio;2.958;4.146;WhatsApp Audio 2025-11-27 at 10.32.19.wav;S02;22.827;24.014;28.041;16000;42
+A006_splice_mismo_hablante;A006_WhatsApp_Audio_2025-11-27_at_10.32.19_splice_mismo_hablante.wav;WhatsApp Audio 2025-11-27 at 10.32.19.wav;S02;H;1;mismo_hablante;22.416;24.66;WhatsApp Audio 2025-11-30 at 13.49.09.wav;S02;12.349;14.594;29.098;16000;42
+A007_clean;A007_WhatsApp_Audio_2025-11-30_at_13.49.09_clean.wav;WhatsApp Audio 2025-11-30 at 13.49.09.wav;S02;H;0;none;;;;;;;22.593;16000;42
+A007_splice_mismo_audio;A007_WhatsApp_Audio_2025-11-30_at_13.49.09_splice_mismo_audio.wav;WhatsApp Audio 2025-11-30 at 13.49.09.wav;S02;H;1;mismo_audio;1.944;3.81;WhatsApp Audio 2025-11-30 at 13.49.09.wav;S02;14.195;16.061;24.459;16000;42
+A007_splice_mismo_hablante;A007_WhatsApp_Audio_2025-11-30_at_13.49.09_splice_mismo_hablante.wav;WhatsApp Audio 2025-11-30 at 13.49.09.wav;S02;H;1;mismo_hablante;18.614;20.773;WhatsApp Audio 2025-11-25 at 13.23.33.wav;S02;29.644;31.804;24.753;16000;42
+A008_clean;A008_WhatsApp_Audio_2026-02-04_at_14.12.19_clean.wav;WhatsApp Audio 2026-02-04 at 14.12.19.wav;S02;H;0;none;;;;;;;23.294;16000;42
+A008_splice_mismo_audio;A008_WhatsApp_Audio_2026-02-04_at_14.12.19_splice_mismo_audio.wav;WhatsApp Audio 2026-02-04 at 14.12.19.wav;S02;H;1;mismo_audio;10.655;12.954;WhatsApp Audio 2026-02-04 at 14.12.19.wav;S02;8.22;10.52;25.593;16000;42
+A008_splice_mismo_hablante;A008_WhatsApp_Audio_2026-02-04_at_14.12.19_splice_mismo_hablante.wav;WhatsApp Audio 2026-02-04 at 14.12.19.wav;S02;H;1;mismo_hablante;15.27;16.514;WhatsApp Audio 2025-11-27 at 10.32.19.wav;S02;9.388;10.632;24.537;16000;42
+A009_clean;A009_WhatsApp_Audio_2026-05-11_at_12.13.40_clean.wav;WhatsApp Audio 2026-05-11 at 12.13.40.wav;S03;M;0;none;;;;;;;72.334;16000;42
+A009_splice_mismo_audio;A009_WhatsApp_Audio_2026-05-11_at_12.13.40_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.13.40.wav;S03;M;1;mismo_audio;6.022;8.075;WhatsApp Audio 2026-05-11 at 12.13.40.wav;S03;47.673;49.726;74.386;16000;42
+A009_splice_mismo_hablante;A009_WhatsApp_Audio_2026-05-11_at_12.13.40_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.13.40.wav;S03;M;1;mismo_hablante;33.512;35.314;WhatsApp Audio 2026-05-11 at 12.17.34 (2).wav;S03;10.041;11.843;74.135;16000;42
+A010_clean;A010_WhatsApp_Audio_2026-05-11_at_12.15.11_clean.wav;WhatsApp Audio 2026-05-11 at 12.15.11.wav;S03;M;0;none;;;;;;;37.413;16000;42
+A010_splice_mismo_audio;A010_WhatsApp_Audio_2026-05-11_at_12.15.11_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.15.11.wav;S03;M;1;mismo_audio;25.37;26.775;WhatsApp Audio 2026-05-11 at 12.15.11.wav;S03;32.471;33.876;38.818;16000;42
+A010_splice_mismo_hablante;A010_WhatsApp_Audio_2026-05-11_at_12.15.11_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.15.11.wav;S03;M;1;mismo_hablante;28.481;30.508;WhatsApp Audio 2026-05-11 at 12.17.34.wav;S03;23.51;25.537;39.44;16000;42
+A011_clean;A011_WhatsApp_Audio_2026-05-11_at_12.17.34_1_clean.wav;WhatsApp Audio 2026-05-11 at 12.17.34 (1).wav;S03;M;0;none;;;;;;;46.194;16000;42
+A011_splice_mismo_audio;A011_WhatsApp_Audio_2026-05-11_at_12.17.34_1_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.17.34 (1).wav;S03;M;1;mismo_audio;14.941;16.285;WhatsApp Audio 2026-05-11 at 12.17.34 (1).wav;S03;2.375;3.719;47.537;16000;42
+A011_splice_mismo_hablante;A011_WhatsApp_Audio_2026-05-11_at_12.17.34_1_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.17.34 (1).wav;S03;M;1;mismo_hablante;26.066;27.165;WhatsApp Audio 2026-05-11 at 12.21.44.wav;S03;43.492;44.591;47.293;16000;42
+A012_clean;A012_WhatsApp_Audio_2026-05-11_at_12.17.34_2_clean.wav;WhatsApp Audio 2026-05-11 at 12.17.34 (2).wav;S03;M;0;none;;;;;;;40.733;16000;42
+A012_splice_mismo_audio;A012_WhatsApp_Audio_2026-05-11_at_12.17.34_2_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.17.34 (2).wav;S03;M;1;mismo_audio;20.337;22.414;WhatsApp Audio 2026-05-11 at 12.17.34 (2).wav;S03;8.794;10.871;42.81;16000;42
+A012_splice_mismo_hablante;A012_WhatsApp_Audio_2026-05-11_at_12.17.34_2_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.17.34 (2).wav;S03;M;1;mismo_hablante;29.856;31.07;WhatsApp Audio 2026-05-11 at 12.32.17.wav;S03;3.818;5.032;41.948;16000;42
+A013_clean;A013_WhatsApp_Audio_2026-05-11_at_12.17.34_clean.wav;WhatsApp Audio 2026-05-11 at 12.17.34.wav;S03;M;0;none;;;;;;;30.733;16000;42
+A013_splice_mismo_audio;A013_WhatsApp_Audio_2026-05-11_at_12.17.34_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.17.34.wav;S03;M;1;mismo_audio;13.31;15.119;WhatsApp Audio 2026-05-11 at 12.17.34.wav;S03;21.113;22.922;32.542;16000;42
+A013_splice_mismo_hablante;A013_WhatsApp_Audio_2026-05-11_at_12.17.34_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.17.34.wav;S03;M;1;mismo_hablante;4.975;6.518;WhatsApp Audio 2026-05-11 at 12.30.33.wav;S03;21.755;23.298;32.276;16000;42
+A014_clean;A014_WhatsApp_Audio_2026-05-11_at_12.21.44_clean.wav;WhatsApp Audio 2026-05-11 at 12.21.44.wav;S03;M;0;none;;;;;;;49.633;16000;42
+A014_splice_mismo_audio;A014_WhatsApp_Audio_2026-05-11_at_12.21.44_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.21.44.wav;S03;M;1;mismo_audio;42.017;43.758;WhatsApp Audio 2026-05-11 at 12.21.44.wav;S03;35.685;37.425;51.374;16000;42
+A014_splice_mismo_hablante;A014_WhatsApp_Audio_2026-05-11_at_12.21.44_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.21.44.wav;S03;M;1;mismo_hablante;21.109;23.05;WhatsApp Audio 2026-05-11 at 12.17.34 (1).wav;S03;34.467;36.408;51.575;16000;42
+A015_clean;A015_WhatsApp_Audio_2026-05-11_at_12.25.03_clean.wav;WhatsApp Audio 2026-05-11 at 12.25.03.wav;S03;M;0;none;;;;;;;61.093;16000;42
+A015_splice_mismo_audio;A015_WhatsApp_Audio_2026-05-11_at_12.25.03_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.25.03.wav;S03;M;1;mismo_audio;59.864;60.959;WhatsApp Audio 2026-05-11 at 12.25.03.wav;S03;23.133;24.228;62.189;16000;42
+A015_splice_mismo_hablante;A015_WhatsApp_Audio_2026-05-11_at_12.25.03_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.25.03.wav;S03;M;1;mismo_hablante;1.678;4.135;WhatsApp Audio 2026-05-11 at 12.17.34.wav;S03;23.619;26.075;63.55;16000;42
+A016_clean;A016_WhatsApp_Audio_2026-05-11_at_12.30.33_clean.wav;WhatsApp Audio 2026-05-11 at 12.30.33.wav;S03;M;0;none;;;;;;;24.354;16000;42
+A016_splice_mismo_audio;A016_WhatsApp_Audio_2026-05-11_at_12.30.33_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.30.33.wav;S03;M;1;mismo_audio;13.003;15.084;WhatsApp Audio 2026-05-11 at 12.30.33.wav;S03;14.82;16.901;26.435;16000;42
+A016_splice_mismo_hablante;A016_WhatsApp_Audio_2026-05-11_at_12.30.33_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.30.33.wav;S03;M;1;mismo_hablante;7.561;9.714;WhatsApp Audio 2026-05-11 at 12.17.34.wav;S03;10.042;12.195;26.506;16000;42
+A017_clean;A017_WhatsApp_Audio_2026-05-11_at_12.32.17_clean.wav;WhatsApp Audio 2026-05-11 at 12.32.17.wav;S03;M;0;none;;;;;;;23.393;16000;42
+A017_splice_mismo_audio;A017_WhatsApp_Audio_2026-05-11_at_12.32.17_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.32.17.wav;S03;M;1;mismo_audio;16.448;17.685;WhatsApp Audio 2026-05-11 at 12.32.17.wav;S03;1.065;2.303;24.631;16000;42
+A017_splice_mismo_hablante;A017_WhatsApp_Audio_2026-05-11_at_12.32.17_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.32.17.wav;S03;M;1;mismo_hablante;11.861;14.319;WhatsApp Audio 2026-05-11 at 12.17.34.wav;S03;21.021;23.479;25.851;16000;42
+A018_clean;A018_WhatsApp_Audio_2026-05-11_at_12.45.58_clean.wav;WhatsApp Audio 2026-05-11 at 12.45.58.wav;S04;M;0;none;;;;;;;42.754;16000;42
+A018_splice_mismo_audio;A018_WhatsApp_Audio_2026-05-11_at_12.45.58_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.45.58.wav;S04;M;1;mismo_audio;35.301;36.461;WhatsApp Audio 2026-05-11 at 12.45.58.wav;S04;25.758;26.918;43.913;16000;42
+A018_splice_mismo_hablante;A018_WhatsApp_Audio_2026-05-11_at_12.45.58_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.45.58.wav;S04;M;1;mismo_hablante;22.982;24.211;WhatsApp Audio 2026-05-11 at 12.48.50.wav;S04;26.898;28.127;43.983;16000;42
+A019_clean;A019_WhatsApp_Audio_2026-05-11_at_12.48.50_clean.wav;WhatsApp Audio 2026-05-11 at 12.48.50.wav;S04;M;0;none;;;;;;;37.194;16000;42
+A019_splice_mismo_audio;A019_WhatsApp_Audio_2026-05-11_at_12.48.50_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.48.50.wav;S04;M;1;mismo_audio;1.02;3.188;WhatsApp Audio 2026-05-11 at 12.48.50.wav;S04;18.515;20.683;39.361;16000;42
+A019_splice_mismo_hablante;A019_WhatsApp_Audio_2026-05-11_at_12.48.50_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.48.50.wav;S04;M;1;mismo_hablante;13.775;15.507;WhatsApp Audio 2026-05-11 at 12.51.30.wav;S04;6.779;8.512;38.926;16000;42
+A020_clean;A020_WhatsApp_Audio_2026-05-11_at_12.51.30_clean.wav;WhatsApp Audio 2026-05-11 at 12.51.30.wav;S04;M;0;none;;;;;;;55.394;16000;42
+A020_splice_mismo_audio;A020_WhatsApp_Audio_2026-05-11_at_12.51.30_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 12.51.30.wav;S04;M;1;mismo_audio;13.785;16.263;WhatsApp Audio 2026-05-11 at 12.51.30.wav;S04;42.077;44.555;57.871;16000;42
+A020_splice_mismo_hablante;A020_WhatsApp_Audio_2026-05-11_at_12.51.30_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 12.51.30.wav;S04;M;1;mismo_hablante;5.573;7.89;WhatsApp Audio 2026-05-11 at 12.45.58.wav;S04;37.397;39.714;57.711;16000;42
+A021_clean;A021_WhatsApp_Audio_2026-05-11_at_13.25.03_clean.wav;WhatsApp Audio 2026-05-11 at 13.25.03.wav;S01;H;0;none;;;;;;;34.794;16000;42
+A021_splice_mismo_audio;A021_WhatsApp_Audio_2026-05-11_at_13.25.03_splice_mismo_audio.wav;WhatsApp Audio 2026-05-11 at 13.25.03.wav;S01;H;1;mismo_audio;25.943;27.672;WhatsApp Audio 2026-05-11 at 13.25.03.wav;S01;3.15;4.879;36.522;16000;42
+A021_splice_mismo_hablante;A021_WhatsApp_Audio_2026-05-11_at_13.25.03_splice_mismo_hablante.wav;WhatsApp Audio 2026-05-11 at 13.25.03.wav;S01;H;1;mismo_hablante;19.03;20.223;Diapo 7.wav;S01;35.629;36.821;35.986;16000;42
