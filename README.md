@@ -69,3 +69,7 @@ El umbral principal usado en la evaluación final es 0.50. Este umbral se selecc
 ## Limitaciones
 
 Esta aplicación es una prueba de concepto. El dataset empleado es reducido y las manipulaciones se han generado de forma controlada. Para audios subidos por el usuario no existe ground truth, por lo que la salida debe interpretarse como una ayuda de cribado y no como una herramienta forense definitiva.
+
+## Robustez en audios subidos
+
+La demo web admite WAV, MP3, M4A, OGG y FLAC. Para evitar errores de códec en Streamlit Community Cloud, los audios subidos se convierten temporalmente a WAV mono 16 kHz mediante FFmpeg cuando es necesario. Además, la versión web limita la subida a 20 MB y analiza como máximo los primeros 120 segundos para evitar agotar la memoria del servidor.

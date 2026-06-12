@@ -22,15 +22,19 @@ Nota metodológica:
 from __future__ import annotations
 
 from pathlib import Path
+import os
+import subprocess
 import tempfile
 from typing import Dict, List, Optional, Tuple
 
 import joblib
 import librosa
 import librosa.display
+import imageio_ffmpeg
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import soundfile as sf
 import streamlit as st
 
 
@@ -47,9 +51,16 @@ VENTANA_S = 1.0
 SALTO_S = 0.5
 DEFAULT_THRESHOLD = 0.50
 
-# Formatos que Streamlit permite subir. Librosa/soundfile gestionan WAV/FLAC/OGG
-# de forma robusta. MP3/M4A dependen del backend disponible en el entorno.
+# Formatos aceptados por la demo. La carga de audios subidos se hace de forma
+# robusta mediante FFmpeg cuando el códec no puede leerse directamente con soundfile.
 EXTENSIONES_AUDIO = ["wav", "mp3", "m4a", "ogg", "flac"]
+
+# Límites de seguridad para evitar que Streamlit Community Cloud se quede sin memoria.
+# La demo pública está pensada para audios cortos o medios; para audios largos se
+# recomienda ejecutar el proyecto localmente.
+MAX_UPLOAD_MB = 20
+MAX_DURATION_S = 120
+FFMPEG_TIMEOUT_S = 90
 
 # Columnas no usadas como variables predictoras. El resto de columnas numéricas
 # del CSV de entrenamiento son las características del modelo.
@@ -216,24 +227,163 @@ def extraer_features_ventana(y: np.ndarray, sr: int) -> Dict[str, float]:
     return features
 
 
+def validar_archivo_subido(uploaded_file) -> Tuple[bool, str]:
+    """Valida tamaño y extensión antes de intentar decodificar el audio."""
+    if uploaded_file is None:
+        return False, "No se ha recibido ningún archivo."
+
+    size_mb = uploaded_file.size / (1024 * 1024)
+    if size_mb > MAX_UPLOAD_MB:
+        return (
+            False,
+            f"El archivo pesa {size_mb:.1f} MB. En la demo web el límite es "
+            f"{MAX_UPLOAD_MB} MB para evitar agotar la memoria del servidor. "
+            "Recorta el audio, conviértelo a WAV/MP3 más corto o ejecútalo localmente."
+        )
+
+    suffix = Path(uploaded_file.name).suffix.lower().replace(".", "")
+    if suffix not in EXTENSIONES_AUDIO:
+        return (
+            False,
+            "Formato no admitido. Usa WAV, MP3, M4A, OGG o FLAC."
+        )
+
+    return True, ""
+
+
+def obtener_ffmpeg_exe() -> str:
+    """Devuelve una ruta a FFmpeg, usando el binario incluido por imageio-ffmpeg."""
+    try:
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        # Último recurso: confiar en que el sistema tenga ffmpeg en PATH.
+        return "ffmpeg"
+
+
+def convertir_a_wav_con_ffmpeg(input_path: Path) -> Path:
+    """
+    Convierte un archivo de audio a WAV mono 16 kHz con FFmpeg.
+
+    Esta conversión soluciona el problema típico de Streamlit Cloud con M4A/MP3:
+    soundfile no soporta todos los códecs y audioread puede no encontrar backend.
+    """
+    output_path = input_path.with_suffix(".converted.wav")
+    ffmpeg_exe = obtener_ffmpeg_exe()
+
+    cmd = [
+        ffmpeg_exe,
+        "-y",
+        "-hide_banner",
+        "-loglevel", "error",
+        "-t", str(MAX_DURATION_S),
+        "-i", str(input_path),
+        "-vn",
+        "-ac", "1",
+        "-ar", str(SR_MODELO),
+        "-f", "wav",
+        str(output_path),
+    ]
+
+    try:
+        subprocess.run(
+            cmd,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=FFMPEG_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise ValueError(
+            "El audio tarda demasiado en convertirse. Para la demo web usa un archivo "
+            "más corto o de menor tamaño."
+        ) from exc
+    except subprocess.CalledProcessError as exc:
+        mensaje = exc.stderr.decode("utf-8", errors="ignore").strip()
+        raise ValueError(
+            "No se ha podido decodificar este audio. Puede deberse a un códec no "
+            "soportado o a un archivo dañado. Prueba a exportarlo como WAV o MP3."
+            + (f"\nDetalle técnico: {mensaje}" if mensaje else "")
+        ) from exc
+
+    if not output_path.exists() or output_path.stat().st_size == 0:
+        raise ValueError("La conversión del audio no generó una señal válida.")
+
+    return output_path
+
+
+def leer_wav_seguro(wav_path: Path) -> Tuple[np.ndarray, int]:
+    """Lee un WAV ya normalizado y garantiza mono float32 a 16 kHz."""
+    y, sr = sf.read(wav_path, dtype="float32", always_2d=False)
+
+    if y.ndim > 1:
+        y = np.mean(y, axis=1).astype(np.float32)
+
+    if sr != SR_MODELO:
+        y = librosa.resample(y, orig_sr=sr, target_sr=SR_MODELO)
+        sr = SR_MODELO
+
+    y = np.asarray(y, dtype=np.float32)
+    if not np.all(np.isfinite(y)):
+        y = np.nan_to_num(y, nan=0.0, posinf=0.0, neginf=0.0)
+
+    max_muestras = int(MAX_DURATION_S * sr)
+    if len(y) > max_muestras:
+        y = y[:max_muestras]
+
+    return y, sr
+
+
 def cargar_audio_desde_bytes(audio_bytes: bytes, suffix: str) -> Tuple[np.ndarray, int, Path]:
     """
-    Guarda temporalmente el audio subido y lo carga con librosa.
+    Guarda temporalmente el audio subido y lo carga de forma robusta.
 
-    Se devuelve también la ruta temporal para poder generar el espectrograma con
-    la misma fuente. La ruta se elimina al final de la ejecución principal.
+    Primero se intenta una lectura directa para formatos sencillos. Si falla, se
+    convierte con FFmpeg a WAV mono 16 kHz. Así se evitan errores NoBackendError
+    en M4A/MP3 dentro de Streamlit Community Cloud.
     """
     suffix = suffix if suffix.startswith(".") else f".{suffix}"
+    suffix = suffix.lower()
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-        tmp.write(audio_bytes)
-        tmp_path = Path(tmp.name)
+    tmp_path = None
+    wav_convertido = None
 
-    y, sr = librosa.load(tmp_path, sr=SR_MODELO, mono=True)
-    return y, sr, tmp_path
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            tmp.write(audio_bytes)
+            tmp_path = Path(tmp.name)
+
+        # Para WAV/FLAC/OGG suele bastar soundfile/librosa. Para M4A/MP3 se fuerza
+        # FFmpeg, porque en Streamlit Cloud audioread puede no tener backend.
+        if suffix in {".m4a", ".mp3"}:
+            wav_convertido = convertir_a_wav_con_ffmpeg(tmp_path)
+            y, sr = leer_wav_seguro(wav_convertido)
+        else:
+            try:
+                y, sr = librosa.load(
+                    tmp_path,
+                    sr=SR_MODELO,
+                    mono=True,
+                    duration=MAX_DURATION_S,
+                )
+            except Exception:
+                wav_convertido = convertir_a_wav_con_ffmpeg(tmp_path)
+                y, sr = leer_wav_seguro(wav_convertido)
+
+        if y is None or len(y) == 0:
+            raise ValueError("No se ha podido obtener señal de audio del archivo subido.")
+
+        return y, sr, tmp_path
+
+    finally:
+        # El archivo convertido es auxiliar y puede eliminarse inmediatamente.
+        if wav_convertido is not None:
+            try:
+                wav_convertido.unlink(missing_ok=True)
+            except Exception:
+                pass
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, max_entries=3)
 def procesar_audio_subido(audio_bytes: bytes, filename: str) -> pd.DataFrame:
     """
     Construye el dataframe de características para un audio externo.
@@ -566,11 +716,12 @@ def main() -> None:
             uploaded_file = st.file_uploader(
                 "Sube un audio para analizarlo",
                 type=EXTENSIONES_AUDIO,
-                help="Formatos recomendados: WAV, FLAC u OGG. MP3/M4A dependen del backend disponible.",
+                help=f"Formatos aceptados: WAV, MP3, M4A, OGG y FLAC. Límite recomendado en la demo web: {MAX_UPLOAD_MB} MB.",
             )
             st.caption(
                 "Los audios subidos se procesan de forma temporal durante la sesión "
-                "y no tienen ground truth asociado."
+                "y no tienen ground truth asociado. Para proteger la demo web, se analiza "
+                f"como máximo los primeros {MAX_DURATION_S} segundos."
             )
 
         threshold = st.slider(
@@ -621,6 +772,12 @@ def main() -> None:
         else:
             assert uploaded_file is not None
             nombre_audio = uploaded_file.name
+
+            es_valido, mensaje_validacion = validar_archivo_subido(uploaded_file)
+            if not es_valido:
+                st.error(mensaje_validacion)
+                st.stop()
+
             audio_bytes = uploaded_file.getvalue()
 
             with st.spinner("Extrayendo características del audio subido..."):
@@ -628,7 +785,13 @@ def main() -> None:
                 df_audio = dataframe_audio_subido_con_scores(df_subido, model, feature_cols, threshold)
     except Exception as exc:
         st.error("No se ha podido analizar el audio seleccionado.")
-        st.exception(exc)
+        st.warning(
+            "El archivo puede tener un códec no soportado, estar dañado, durar demasiado "
+            "o superar los recursos disponibles de la demo web. Prueba con un WAV/MP3 "
+            "más corto o ejecuta la aplicación localmente."
+        )
+        with st.expander("Ver detalle técnico"):
+            st.code(str(exc))
         st.stop()
 
     df_audio["centro_ventana_s"] = (df_audio["inicio_ventana_s"] + df_audio["fin_ventana_s"]) / 2
