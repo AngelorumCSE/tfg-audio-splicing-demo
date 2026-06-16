@@ -43,7 +43,22 @@ ROOT = Path(__file__).parent
 AUDIO_DIR = ROOT / "data" / "generated"
 FEATURES_PATH = ROOT / "data" / "processed" / "window_features_borde.csv"
 MANIFEST_PATH = ROOT / "data" / "manifests" / "splicing_manifest.csv"
-MODEL_PATH = ROOT / "models" / "random_forest_borde.joblib"
+
+# Modelo: se prefiere el detector reformulado cross-source (LibriSpeech) si está
+# disponible; si no, se usa el modelo intra-fuente original. Ambos comparten el
+# mismo formato (108 características), por lo que la inferencia es idéntica.
+_MODELO_LIBRI = ROOT / "models" / "modelo_libri.joblib"
+MODEL_PATH = _MODELO_LIBRI if _MODELO_LIBRI.exists() else ROOT / "models" / "random_forest_borde.joblib"
+
+# Informe forense en PDF (opcional): se importa de src/. Si no está disponible,
+# la app sigue funcionando sin el botón de descarga del informe.
+import sys
+sys.path.append(str(ROOT / "src"))
+try:
+    from informe_forense import construir_informe_forense_bytes, sha256_de_bytes
+    INFORME_FORENSE_DISPONIBLE = True
+except Exception:
+    INFORME_FORENSE_DISPONIBLE = False
 
 # Parámetros usados en el pipeline experimental del TFG.
 SR_MODELO = 16000
@@ -664,6 +679,100 @@ def generar_espectrograma_desde_signal(
     return fig
 
 
+def generar_grafica_onda(
+    y: np.ndarray,
+    sr: int,
+    inicio_gt: Optional[float],
+    fin_gt: Optional[float],
+    intervalos_pred: List[Dict[str, float]],
+):
+    """Dibuja la forma de onda marcando ground truth e intervalos predichos."""
+    fig, ax = plt.subplots(figsize=(13, 3))
+    if y is None or len(y) == 0:
+        ax.set_axis_off()
+        ax.text(0.5, 0.5, "Forma de onda no disponible.", ha="center", va="center",
+                transform=ax.transAxes)
+        return fig
+
+    # Submuestreo solo para dibujar (no afecta al análisis), para no saturar la figura.
+    paso = max(1, len(y) // 8000)
+    y_plot = y[::paso]
+    t = np.arange(len(y_plot)) * paso / sr
+    ax.plot(t, y_plot, lw=0.6, color="#1F6FB2")
+
+    if inicio_gt is not None and fin_gt is not None:
+        ax.axvspan(inicio_gt, fin_gt, alpha=0.20, color="green", label="Ground truth")
+    for i, intervalo in enumerate(intervalos_pred):
+        ax.axvspan(intervalo["inicio_s"], intervalo["fin_s"], alpha=0.15, color="red",
+                   label="Intervalo predicho" if i == 0 else None)
+
+    ax.set_title("Forma de onda con zonas marcadas")
+    ax.set_xlabel("Tiempo (s)")
+    ax.set_ylabel("Amplitud")
+    ax.grid(True, alpha=0.3)
+    if inicio_gt is not None or intervalos_pred:
+        ax.legend(loc="upper right", fontsize=8)
+    fig.tight_layout()
+    return fig
+
+
+def modo_lote(model, feature_cols: List[str], threshold: float) -> None:
+    """Procesa varios audios subidos y muestra una tabla-resumen descargable."""
+    st.subheader("Procesamiento por lotes")
+    st.caption(
+        "Sube varios audios para obtener una tabla-resumen con la predicción y el tamper "
+        "score de cada uno. Se aplican los mismos límites que en el modo individual."
+    )
+    archivos = st.file_uploader(
+        "Sube uno o varios audios",
+        type=EXTENSIONES_AUDIO,
+        accept_multiple_files=True,
+        help=f"Formatos: WAV, MP3, M4A, OGG, FLAC. Límite por archivo: {MAX_UPLOAD_MB} MB.",
+    )
+    if not archivos:
+        st.info("Selecciona al menos un archivo para iniciar el análisis por lotes.")
+        return
+
+    filas = []
+    barra = st.progress(0.0)
+    for i, f in enumerate(archivos, start=1):
+        registro = {"archivo": f.name, "estado": "OK"}
+        try:
+            ok, msg = validar_archivo_subido(f)
+            if not ok:
+                registro.update({"estado": msg, "prediccion": "-", "tamper_score": None,
+                                 "intervalos": None})
+            else:
+                audio_bytes = f.getvalue()
+                df_subido = procesar_audio_subido(audio_bytes, f.name)
+                df_audio = dataframe_audio_subido_con_scores(df_subido, model, feature_cols, threshold)
+                df_audio["centro_ventana_s"] = (df_audio["inicio_ventana_s"] + df_audio["fin_ventana_s"]) / 2
+                tamper = float(df_audio["score_sospecha"].max())
+                intervalos = obtener_intervalos_predichos(df_audio, threshold)
+                registro.update({
+                    "prediccion": "Sospechoso" if tamper >= threshold else "Limpio",
+                    "tamper_score": round(tamper, 4),
+                    "intervalos": len(intervalos),
+                })
+        except Exception as exc:  # un archivo problemático no debe abortar el lote
+            registro.update({"estado": f"Error: {exc}", "prediccion": "-",
+                             "tamper_score": None, "intervalos": None})
+        filas.append(registro)
+        barra.progress(i / len(archivos))
+
+    df_resumen = pd.DataFrame(filas, columns=["archivo", "prediccion", "tamper_score",
+                                              "intervalos", "estado"])
+    st.dataframe(df_resumen, use_container_width=True)
+
+    n_ok = int((df_resumen["prediccion"] != "-").sum())
+    n_sosp = int((df_resumen["prediccion"] == "Sospechoso").sum())
+    st.write(f"Analizados correctamente: {n_ok}/{len(archivos)}  ·  Marcados como sospechosos: {n_sosp}")
+
+    csv = df_resumen.to_csv(index=False, sep=";").encode("utf-8")
+    st.download_button("Descargar resumen del lote (CSV)", data=csv,
+                       file_name="resumen_lote.csv", mime="text/csv")
+
+
 def main() -> None:
     st.title("Detector de manipulación por splicing en audio")
     st.caption(
@@ -703,7 +812,7 @@ def main() -> None:
 
         modo = st.radio(
             "Modo de análisis",
-            ["Ejemplos precargados", "Subir audio propio"],
+            ["Ejemplos precargados", "Subir audio propio", "Procesar lote (varios audios)"],
             index=0,
         )
 
@@ -712,6 +821,8 @@ def main() -> None:
 
         if modo == "Ejemplos precargados":
             audio_seleccionado = st.selectbox("Selecciona un audio", audios_ejemplo)
+        elif modo == "Procesar lote (varios audios)":
+            st.caption("El análisis por lotes se realiza en el panel principal.")
         else:
             uploaded_file = st.file_uploader(
                 "Sube un audio para analizarlo",
@@ -741,6 +852,10 @@ def main() -> None:
         st.code(str(MODEL_PATH.name))
         st.write("Columnas usadas por el modelo:")
         st.code(str(len(feature_cols)))
+
+    if modo == "Procesar lote (varios audios)":
+        modo_lote(model, feature_cols, threshold)
+        st.stop()
 
     if modo == "Subir audio propio" and uploaded_file is None:
         st.warning("Sube un archivo de audio para iniciar el análisis o cambia a los ejemplos precargados.")
@@ -864,6 +979,26 @@ def main() -> None:
         st.warning("No se ha podido generar el espectrograma para este audio.")
         st.code(str(exc))
 
+    # Señal de audio (carga robusta), reutilizada para la forma de onda y el informe forense.
+    y_sig, sr_sig = None, None
+    try:
+        if modo == "Ejemplos precargados" and audio_path is not None and audio_path.exists():
+            y_sig, sr_sig = librosa.load(audio_path, sr=SR_MODELO, mono=True, duration=MAX_DURATION_S)
+        elif audio_bytes is not None:
+            y_sig, sr_sig, _tmp = cargar_audio_desde_bytes(audio_bytes, Path(nombre_audio).suffix or ".wav")
+            try:
+                _tmp.unlink(missing_ok=True)
+            except Exception:
+                pass
+    except Exception:
+        y_sig, sr_sig = None, None
+
+    if y_sig is not None and len(y_sig) > 0:
+        st.subheader("Forma de onda")
+        fig_onda = generar_grafica_onda(y_sig, sr_sig, inicio_gt, fin_gt, intervalos_pred)
+        st.pyplot(fig_onda)
+        plt.close(fig_onda)
+
     st.subheader("Datos por ventana")
     columnas_mostrar = [
         "archivo_generado",
@@ -886,6 +1021,39 @@ def main() -> None:
         file_name=f"resultado_{Path(nombre_audio).stem}.csv",
         mime="text/csv",
     )
+
+    if INFORME_FORENSE_DISPONIBLE:
+        st.subheader("Informe forense (PDF)")
+        try:
+            bytes_para_hash = (
+                audio_path.read_bytes()
+                if (modo == "Ejemplos precargados" and audio_path is not None and audio_path.exists())
+                else audio_bytes
+            )
+            informe_pdf = construir_informe_forense_bytes(
+                nombre_archivo=nombre_audio,
+                df_audio=df_audio,
+                threshold=threshold,
+                tamper_score=tamper_score,
+                prediccion=prediccion_archivo,
+                intervalos=intervalos_pred,
+                audio_bytes=bytes_para_hash,
+                duracion_s=(len(y_sig) / sr_sig) if (y_sig is not None and sr_sig) else None,
+                sr=sr_sig or SR_MODELO,
+                y=y_sig,
+                inicio_gt=inicio_gt,
+                fin_gt=fin_gt,
+            )
+            st.download_button(
+                label="Descargar informe forense (PDF)",
+                data=informe_pdf,
+                file_name=f"informe_forense_{Path(nombre_audio).stem}.pdf",
+                mime="application/pdf",
+            )
+            st.caption("El informe incluye el hash SHA-256 del archivo (cadena de custodia).")
+        except Exception as exc:
+            st.warning("No se ha podido generar el informe forense en PDF.")
+            st.code(str(exc))
 
 
 if __name__ == "__main__":
