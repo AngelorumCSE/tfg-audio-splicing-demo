@@ -1,3 +1,7 @@
+"""
+Entrena el modelo por ventana con características delta y submuestreo balanceado de la clase
+negativa (proporción 1:3), para mitigar el fuerte desbalance entre ventanas limpias y de borde.
+"""
 from pathlib import Path
 import pandas as pd
 import joblib

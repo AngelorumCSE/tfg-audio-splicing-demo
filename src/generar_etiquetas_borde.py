@@ -1,3 +1,7 @@
+"""
+Añade la etiqueta de borde (1 si la ventana está a ±0,75 s de una inserción) al CSV de
+características delta, generando el conjunto de entrenamiento del modelo de borde.
+"""
 from pathlib import Path
 import pandas as pd
 import csv

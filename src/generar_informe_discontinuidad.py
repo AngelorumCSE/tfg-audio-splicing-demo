@@ -1,3 +1,7 @@
+"""
+Genera informes de discontinuidad por audio a partir de las características delta, para inspeccionar
+visualmente dónde se concentran los cambios bruscos.
+"""
 from pathlib import Path
 import argparse
 import csv

@@ -1,3 +1,7 @@
+"""
+Barrido de umbrales de decisión del modelo base por ventana (accuracy, precision, recall y F1)
+para estudiar el compromiso entre detección y falsos positivos.
+"""
 from pathlib import Path
 import pandas as pd
 import joblib

@@ -1,3 +1,7 @@
+"""
+Barrido fino de umbrales a nivel de archivo, reutilizando el modelo de ventanas para localizar
+el mejor punto de operación.
+"""
 import sys
 from pathlib import Path
 import numpy as np

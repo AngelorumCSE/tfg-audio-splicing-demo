@@ -1,3 +1,7 @@
+"""
+Evalúa el modelo de borde a nivel de archivo: agrega los scores por ventana (tamper score =
+máximo) y decide con un umbral fijo, reportando detección y localización.
+"""
 from pathlib import Path
 import csv
 import joblib

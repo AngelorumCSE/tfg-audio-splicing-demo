@@ -1,3 +1,7 @@
+"""
+Entrena el Random Forest base por ventana usando solo las características de la ventana actual
+(sin diferencias delta). Sirve de línea base del prototipo.
+"""
 from pathlib import Path
 import pandas as pd
 import joblib

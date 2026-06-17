@@ -1,3 +1,7 @@
+"""
+Calcula las diferencias delta de cada característica respecto a la ventana anterior y posterior,
+que capturan los cambios bruscos (discontinuidades) en los que se apoya la detección.
+"""
 from pathlib import Path
 import pandas as pd
 import numpy as np

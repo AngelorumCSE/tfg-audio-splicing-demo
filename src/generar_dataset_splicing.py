@@ -1,3 +1,7 @@
+"""
+Genera el dataset de splicing intra-fuente a partir de grabaciones propias: crea variantes
+limpias y manipuladas (mismo audio / mismo hablante) y un manifiesto con el ground truth temporal.
+"""
 from pathlib import Path
 import csv
 import random

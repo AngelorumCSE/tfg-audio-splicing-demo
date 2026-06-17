@@ -1,3 +1,7 @@
+"""
+Barrido de umbrales a nivel de archivo con el modelo de borde, calculando detección y
+localización para cada umbral (tabla que alimenta el resumen final).
+"""
 from pathlib import Path
 import csv
 import joblib

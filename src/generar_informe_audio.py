@@ -1,3 +1,7 @@
+"""
+Genera un informe visual por audio (curva temporal de sospecha, intervalos detectados y
+espectrograma) usando el modelo de borde.
+"""
 from pathlib import Path
 import argparse
 import csv

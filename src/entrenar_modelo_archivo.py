@@ -1,3 +1,7 @@
+"""
+Entrena y evalúa el clasificador a nivel de archivo (agregando los scores por ventana en un
+tamper score por audio). Forma parte del prototipo intra-fuente inicial.
+"""
 from pathlib import Path
 import numpy as np
 import pandas as pd

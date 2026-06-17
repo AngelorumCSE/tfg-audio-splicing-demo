@@ -1,3 +1,7 @@
+"""
+Entrena el Random Forest sobre la etiqueta de borde (características base + delta). Es el modelo
+principal del prototipo intra-fuente, orientado a marcar las ventanas próximas a un empalme.
+"""
 from pathlib import Path
 import pandas as pd
 import joblib

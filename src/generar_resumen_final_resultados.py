@@ -1,3 +1,7 @@
+"""
+Produce el resumen final del modelo de borde: tabla de métricas por umbral, gráfica de evolución
+y matriz de confusión en el umbral elegido (0,50).
+"""
 from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
