@@ -1,0 +1,16 @@
+TRANSFERENCIA EXPLORATORIA A PARTIALSPOOF (dev) — detector cross-source SIN reentrenar
+====================================================================================
+
+Muestra: 250 bonafide + 246 parcialmente falsos (semilla 42; 4 descartados por duración/lectura)
+Detector: modelo_libri.joblib (108 características, entrenado con empalmes de voz genuina)
+
+ROC-AUC por archivo: 0.237   |   PR-AUC: 0.356   (0,5 = azar)
+Tamper mediano bonafide: 0.429  |  parcial: 0.344
+Marcados como sospechosos @0,50: bonafide 48/250 | parcial 9/246
+Marcados como sospechosos @0,30: bonafide 235/250 | parcial 176/246
+
+Lectura: PartialSpoof inserta VOZ SINTÉTICA; este detector modela discontinuidades
+de VOZ GENUINA y no fue entrenado ni calibrado para este material. El valor del
+experimento es cuantificar esa transferencia (o su ausencia), en línea con la
+brecha out-of-domain que reporta la literatura (He et al., 2025), y complementar
+el argumento de no-comparabilidad de la sección 6.8 con una medición directa.

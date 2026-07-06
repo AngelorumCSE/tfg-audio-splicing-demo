@@ -2,7 +2,7 @@
 # Uso:  make all   |   make dataset features train eval cv test   |   make app
 PY ?= python3
 
-.PHONY: all dataset features labels train eval cv summary app test multiseed desglose-cross clean help
+.PHONY: all dataset features labels train eval cv summary app test multiseed desglose-cross espanol iou-cross transferencia clean help
 
 all: dataset features labels train eval summary ## Reproduce el pipeline completo
 
@@ -39,6 +39,16 @@ multiseed: ## Variabilidad entre semillas del detector cross-source (requiere da
 
 desglose-cross: ## Desglose por tipo y ablación/comparativa cross-source (requiere data/libri)
 	$(PY) analisis_avanzado/08_desglose_y_ablacion_cross.py
+
+
+espanol: ## Comprobación exploratoria en español (Anexo B; requiere data/generated y data/libri)
+	$(PY) analisis_avanzado/09_comprobacion_espanol.py
+
+iou-cross: ## Localización con criterio estricto IoU en cross-source (requiere data/libri)
+	$(PY) analisis_avanzado/10_iou_localizacion_cross.py
+
+transferencia: ## Transferencia exploratoria a PartialSpoof (requiere el dataset descargado; ver cabecera del script)
+	$(PY) analisis_avanzado/11_transferencia_partialspoof.py
 
 clean: ## Borra artefactos regenerables (no toca raw_wav ni código)
 	rm -f reports/evaluacion_por_archivo_cv.csv reports/resumen_por_archivo_cv.txt

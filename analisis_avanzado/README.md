@@ -22,6 +22,9 @@ Las salidas se guardan en `reports/avanzado/`.
 | `06_diagnostico_por_tipo.py` | Desglose por tipo de empalme del experimento intra-fuente (`mismo_audio` vs `mismo_hablante`), out-of-fold. | `diagnostico_por_tipo.csv`, `diagnostico_por_tipo.txt` |
 | `07_multisemilla_libri.py` | Variabilidad del detector cross-source entre 5 semillas (media ± desviación típica de ROC-AUC y PR-AUC). | `multisemilla_libri.csv`, `multisemilla_libri.txt` |
 | `08_desglose_y_ablacion_cross.py` | Sobre el conjunto cross-source (LibriSpeech): desglose de detección/localización por tipo en los umbrales operativos y ablación/comparativa de clasificadores, por hablante. | `desglose_cross_por_tipo.csv/.txt`, `ablacion_baselines_cross.csv/.txt` |
+| `09_comprobacion_espanol.py` | Comprobación exploratoria de validez en español: host real de WhatsApp + inserto cross-source, con el modelo ya entrenado (Anexo B de la memoria). | `comprobacion_espanol.csv/.txt` |
+| `10_iou_localizacion_cross.py` | Localización con criterio estricto (IoU) en cross-source, out-of-fold, por tipo y umbral. | `iou_localizacion_cross.csv/.txt` |
+| `11_transferencia_partialspoof.py` | Transferencia exploratoria del detector, sin reentrenar, al benchmark público PartialSpoof v1.2 (dev). Requiere descargar el dataset (Zenodo 5766198, CC BY 4.0; instrucciones en la cabecera). | `transferencia_partialspoof.csv/.txt` |
 
 ```bash
 cd Codigo_y_Resultados
@@ -34,6 +37,8 @@ python3 analisis_avanzado/05_validacion_externa.py --dir data/externo
 python3 analisis_avanzado/06_diagnostico_por_tipo.py
 python3 analisis_avanzado/07_multisemilla_libri.py   # varianza entre semillas (cross-source)
 python3 analisis_avanzado/08_desglose_y_ablacion_cross.py   # desglose y ablación cross-source
+python3 analisis_avanzado/09_comprobacion_espanol.py         # validez en español (Anexo B)
+python3 analisis_avanzado/10_iou_localizacion_cross.py       # IoU de localización
 ```
 
 Los scripts `03` y `04` admiten `--sufijo _libri` para la reejecución sobre el
@@ -51,6 +56,8 @@ detector cross-source; los artefactos entregados en `reports/avanzado/` con sufi
 | Diagnóstico por tipo intra-fuente (`06`) | §6.7–6.8 (motivación de la reformulación) | `diagnostico_por_tipo.*` |
 | Variabilidad multisemilla (`07`) | §6.8 (0,71 ± 0,02 / 0,89 ± 0,01) | `multisemilla_libri.*` |
 | Desglose y ablación cross-source (`08`) | §6.8 (localización por tipo, recall solo-cross) y §6.9 (párrafo final) | `desglose_cross_por_tipo.*`, `ablacion_baselines_cross.*` |
+| Comprobación en español (`09`) | Anexo B | `comprobacion_espanol.*` |
+| Localización con IoU (`10`) | §6.8 (criterio estricto) | `iou_localizacion_cross.*` |
 
 > Nota: estos scripts no modifican el modelo entregado ni las cifras de la memoria;
 > producen la evidencia adicional de `reports/avanzado/`.

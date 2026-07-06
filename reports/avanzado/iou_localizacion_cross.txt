@@ -1,0 +1,22 @@
+LOCALIZACIÓN CON IoU — detector cross-source (OOF, GroupKFold por hablante)
+==============================================================================
+
+Umbral 0.50:
+  IoU medio (todos los manipulados, n=90):    0.252
+  IoU medio (solo aciertos con solape, n=39): 0.582
+  Archivos con IoU >= 0,3: 32/90  |  IoU >= 0,5: 29/90
+    cross_speaker          IoU medio 0.056 | >=0,3: 2/30
+    cross_speaker_ruido    IoU medio 0.669 | >=0,3: 29/30
+    same_speaker           IoU medio 0.031 | >=0,3: 1/30
+
+Umbral 0.30:
+  IoU medio (todos los manipulados, n=90):    0.321
+  IoU medio (solo aciertos con solape, n=82): 0.352
+  Archivos con IoU >= 0,3: 46/90  |  IoU >= 0,5: 23/90
+    cross_speaker          IoU medio 0.332 | >=0,3: 15/30
+    cross_speaker_ruido    IoU medio 0.400 | >=0,3: 22/30
+    same_speaker           IoU medio 0.231 | >=0,3: 9/30
+
+Lectura: el IoU penaliza los intervalos predichos demasiado anchos o
+descentrados; complementa la tasa de solape de la memoria (secciones 6.6
+y 6.8) con un criterio estricto, como se proponía en la línea futura.

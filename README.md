@@ -33,6 +33,8 @@ https://tfg-audio-splicing-demo.streamlit.app/
 ### Novedades de esta versión (mejoras de ingeniería y rigor)
 
 - `analisis_avanzado/08_desglose_y_ablacion_cross.py`: desglose de detección/localización por tipo de empalme en el umbral operativo y ablación/comparativa de clasificadores sobre el conjunto cross-source (salidas en `reports/avanzado/desglose_cross_por_tipo.*` y `ablacion_baselines_cross.*`). También `make desglose-cross`.
+- `analisis_avanzado/09_comprobacion_espanol.py`: comprobación exploratoria de validez en español con el modelo ya entrenado (Anexo B de la memoria). También `make espanol`.
+- `analisis_avanzado/10_iou_localizacion_cross.py`: localización con criterio estricto (IoU) sobre el conjunto cross-source, out-of-fold (sección 6.8 de la memoria). También `make iou-cross`.
 
 - **Coherencia artefacto–memoria**: los bundles joblib persisten ahora el umbral operativo (`best_threshold = 0.50`, el usado en la memoria y la app) y conservan `best_threshold_f1` como referencia; el slider de la app se inicializa con el umbral persistido.
 - Constantes centralizadas: la app y los scripts toman SR/ventana/salto/umbral de `src/config.py` (con valores por defecto si no está disponible).
