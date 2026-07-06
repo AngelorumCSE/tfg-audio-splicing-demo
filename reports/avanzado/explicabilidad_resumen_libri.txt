@@ -1,0 +1,37 @@
+EXPLICABILIDAD — importancia por permutación (partición de prueba)
+======================================================================
+
+Fracción de importancia en características delta (discontinuidad): 65.9%
+
+Top 15 características:
+                  caracteristica  importancia     desv
+         spectral_bandwidth_mean     0.004569 0.001946
+          delta_prev_mfcc_9_mean     0.002623 0.000456
+                     mfcc_6_mean     0.002538 0.000708
+                     mfcc_1_mean     0.002453 0.000592
+ delta_prev_spectral_rolloff_std     0.002453 0.000728
+           delta_prev_mfcc_1_std     0.002453 0.000561
+          delta_next_mfcc_12_std     0.002284 0.000574
+          delta_prev_mfcc_1_mean     0.002284 0.000931
+          delta_prev_mfcc_10_std     0.002242 0.000826
+           delta_next_mfcc_1_std     0.002115 0.000682
+                    mfcc_11_mean     0.002073 0.000834
+delta_prev_spectral_centroid_std     0.002030 0.000493
+           delta_prev_mfcc_5_std     0.001946 0.000574
+                    mfcc_13_mean     0.001904 0.000433
+          delta_next_mfcc_1_mean     0.001861 0.000785
+
+Importancia agregada por familia:
+familia
+MFCC                   0.065863
+ZCR                    0.006430
+RMS (energía)          0.004357
+Centroide espectral    0.004103
+Ancho de banda         0.003934
+Rolloff                0.001100
+
+Importancia por tipo:
+tipo
+delta (anterior)     0.038875
+ventana actual       0.029315
+delta (posterior)    0.017597

@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Aplicación Streamlit del prototipo de detección de manipulación por splicing.
 
@@ -40,9 +42,20 @@ import streamlit as st
 
 ROOT = Path(__file__).parent
 
-AUDIO_DIR = ROOT / "data" / "generated"
-FEATURES_PATH = ROOT / "data" / "processed" / "window_features_borde.csv"
-MANIFEST_PATH = ROOT / "data" / "manifests" / "splicing_manifest.csv"
+# Ejemplos precargados: si existe data/demo/ (ejemplos cross-source curados con
+# preparar_ejemplos_demo.py, los mismos de la demo web) se usa esa carpeta. En su
+# defecto se mantienen las rutas del dataset experimental, de modo que los CSV
+# completos de data/processed y data/manifests quedan intactos como evidencia
+# reproducible del experimento (secciones 5.2 a 5.5 de la memoria).
+_DEMO_DIR = ROOT / "data" / "demo"
+if (_DEMO_DIR / "manifest_demo.csv").exists():
+    AUDIO_DIR = _DEMO_DIR / "audios"
+    FEATURES_PATH = _DEMO_DIR / "features_demo.csv"
+    MANIFEST_PATH = _DEMO_DIR / "manifest_demo.csv"
+else:
+    AUDIO_DIR = ROOT / "data" / "generated"
+    FEATURES_PATH = ROOT / "data" / "processed" / "window_features_borde.csv"
+    MANIFEST_PATH = ROOT / "data" / "manifests" / "splicing_manifest.csv"
 
 # Modelo: se prefiere el detector reformulado cross-source (LibriSpeech) si está
 # disponible; si no, se usa el modelo intra-fuente original. Ambos comparten el
@@ -60,11 +73,16 @@ try:
 except Exception:
     INFORME_FORENSE_DISPONIBLE = False
 
-# Parámetros usados en el pipeline experimental del TFG.
-SR_MODELO = 16000
-VENTANA_S = 1.0
-SALTO_S = 0.5
-DEFAULT_THRESHOLD = 0.50
+# Parámetros usados en el pipeline experimental del TFG. Se toman de la
+# configuración central si está disponible para evitar valores duplicados.
+try:
+    from config import (SR as SR_MODELO, VENTANA_S, SALTO_S,
+                        DEFAULT_THRESHOLD)
+except ImportError:
+    SR_MODELO = 16000
+    VENTANA_S = 1.0
+    SALTO_S = 0.5
+    DEFAULT_THRESHOLD = 0.50
 
 # Formatos aceptados por la demo. La carga de audios subidos se hace de forma
 # robusta mediante FFmpeg cuando el códec no puede leerse directamente con soundfile.
@@ -835,11 +853,16 @@ def main() -> None:
                 f"como máximo los primeros {MAX_DURATION_S} segundos."
             )
 
+        # El valor inicial del umbral es el persistido junto al modelo
+        # (best_threshold, el umbral operativo 0,50 de la memoria).
+        umbral_defecto = float(bundle.get("best_threshold", DEFAULT_THRESHOLD))
+        if not 0.30 <= umbral_defecto <= 0.75:
+            umbral_defecto = DEFAULT_THRESHOLD
         threshold = st.slider(
             "Umbral de decisión",
             min_value=0.30,
             max_value=0.75,
-            value=DEFAULT_THRESHOLD,
+            value=umbral_defecto,
             step=0.05,
         )
 
@@ -922,7 +945,10 @@ def main() -> None:
         if modo == "Ejemplos precargados" and audio_path is not None and audio_path.exists():
             st.audio(audio_path.read_bytes(), format="audio/wav")
         elif modo == "Subir audio propio" and audio_bytes is not None:
-            st.audio(audio_bytes, format=f"audio/{Path(nombre_audio).suffix.replace('.', '') or 'wav'}")
+            _mimes = {"wav": "audio/wav", "mp3": "audio/mpeg", "m4a": "audio/mp4",
+                      "ogg": "audio/ogg", "flac": "audio/flac"}
+            _ext = Path(nombre_audio).suffix.replace(".", "").lower() or "wav"
+            st.audio(audio_bytes, format=_mimes.get(_ext, "audio/wav"))
 
     with col2:
         st.subheader("Resultado")

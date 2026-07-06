@@ -1,0 +1,18 @@
+DIAGNÓSTICO POR TIPO DE EMPALME (out-of-fold, sin fuga de datos)
+======================================================================
+
+Capacidad de separar LIMPIOS vs cada tipo (ROC-AUC, 0,5 = azar):
+  Limpios vs 'mismo_audio'    (misma grabación):   ROC-AUC = 0.573
+  Limpios vs 'mismo_hablante' (otra grabación):    ROC-AUC = 0.611
+
+Tasa de falsos positivos en limpios, y detección/localización por tipo:
+ umbral FP_limpios det_mismo_audio loc_mismo_audio det_mismo_hablante loc_mismo_hablante
+   0.30      21/21           21/21           16/21              21/21              16/21
+   0.35      21/21           21/21           13/21              21/21              12/21
+   0.40      16/21           18/21            6/21              19/21               5/21
+   0.45      11/21           11/21            2/21              15/21               3/21
+   0.50       2/21            5/21            1/21               3/21               0/21
+
+Lectura: si 'mismo_hablante' tiene ROC-AUC y detección claramente mayores que
+'mismo_audio', el sistema detecta empalmes con discontinuidad acústica real
+(entre grabaciones distintas) aunque no las ediciones dentro de la misma toma.

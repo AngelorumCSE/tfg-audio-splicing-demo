@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Produce el resumen final del modelo de borde: tabla de métricas por umbral, gráfica de evolución
 y matriz de confusión en el umbral elegido (0,50).

@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Evalúa el modelo de borde a nivel de archivo: agrega los scores por ventana (tamper score =
 máximo) y decide con un umbral fijo, reportando detección y localización.
@@ -15,7 +17,13 @@ MODEL_PATH = Path("models/random_forest_borde.joblib")
 OUT_CSV = Path("reports/evaluacion_por_archivo_borde.csv")
 OUT_TXT = Path("reports/resumen_evaluacion_por_archivo_borde.txt")
 
-THRESHOLD = 0.30
+try:
+    import sys as _sys
+    from pathlib import Path as _P
+    _sys.path.append(str(_P(__file__).resolve().parent))
+    from config import DEFAULT_THRESHOLD as THRESHOLD  # 0.50, umbral operativo
+except ImportError:
+    THRESHOLD = 0.50
 MAX_GAP_S = 0.75
 MIN_DURATION_S = 0.50
 

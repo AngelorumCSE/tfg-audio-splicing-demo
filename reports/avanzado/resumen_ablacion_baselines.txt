@@ -1,0 +1,21 @@
+ABLACIÓN Y COMPARATIVA DE MODELOS (out-of-fold, GroupKFold por archivo_base)
+==============================================================================
+
+Umbral de decisión: 0.5 | Pliegues: 5
+
+1) Ablación de las características de discontinuidad (delta):
+          conjunto  n_features  accuracy  precision  recall     f1  roc_auc  pr_auc
+    Solo base (36)          36    0.5714     0.6923  0.6429 0.6667   0.5153  0.6570
+Base + delta (108)         108    0.4286     0.8000  0.1905 0.3077   0.5918  0.7456
+
+   La diferencia de F1/AUC entre 'solo base' y 'base + delta' cuantifica la
+   aportación de las deltas, núcleo de la hipótesis del trabajo.
+
+2) Comparativa de clasificadores (conjunto completo de 108 características):
+              modelo  accuracy  precision  recall     f1  roc_auc  pr_auc
+        RandomForest    0.4286     0.8000  0.1905 0.3077   0.5918  0.7456
+  RegresiónLogística    0.6667     0.6667  1.0000 0.8000   0.5119  0.6997
+           SVM (RBF)    0.3492     0.5455  0.1429 0.2264   0.4711  0.6475
+HistGradientBoosting    0.6508     0.6667  0.9524 0.7843   0.5006  0.6545
+
+   Todos los modelos se evalúan con el mismo protocolo honesto (out-of-fold).

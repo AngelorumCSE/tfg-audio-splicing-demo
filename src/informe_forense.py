@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Generación de un informe forense en PDF por audio analizado.
 

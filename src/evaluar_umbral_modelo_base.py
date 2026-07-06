@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Barrido de umbrales de decisión del modelo base por ventana (accuracy, precision, recall y F1)
 para estudiar el compromiso entre detección y falsos positivos.

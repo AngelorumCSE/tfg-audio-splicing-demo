@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Genera informes de discontinuidad por audio a partir de las características delta, para inspeccionar
 visualmente dónde se concentran los cambios bruscos.

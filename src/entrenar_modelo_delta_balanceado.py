@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Entrena el modelo por ventana con características delta y submuestreo balanceado de la clase
 negativa (proporción 1:3), para mitigar el fuerte desbalance entre ventanas limpias y de borde.

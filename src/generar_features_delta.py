@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Calcula las diferencias delta de cada característica respecto a la ventana anterior y posterior,
 que capturan los cambios bruscos (discontinuidades) en los que se apoya la detección.
@@ -9,6 +11,9 @@ import numpy as np
 IN_CSV = Path("data/processed/window_features.csv")
 OUT_CSV = Path("data/processed/window_features_delta.csv")
 
+# Nota: esta lista es específica de esta etapa del pipeline (todavía no existen
+# centro_ventana_s ni etiqueta_borde, que se crean después); no debe sustituirse
+# por config.META_COLS.
 META_COLS = [
     "id_registro",
     "archivo_generado",

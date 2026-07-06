@@ -1,0 +1,5 @@
+modelo;accuracy;precision;recall;f1;roc_auc;pr_auc
+RandomForest;0.4286;0.8;0.1905;0.3077;0.5918;0.7456
+RegresiónLogística;0.6667;0.6667;1.0;0.8;0.5119;0.6997
+SVM (RBF);0.3492;0.5455;0.1429;0.2264;0.4711;0.6475
+HistGradientBoosting;0.6508;0.6667;0.9524;0.7843;0.5006;0.6545

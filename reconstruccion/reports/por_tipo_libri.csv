@@ -1,0 +1,4 @@
+tipo;n;roc_auc_vs_limpios;tamper_medio
+cross_speaker;30;0.634;0.503
+cross_speaker_ruido;30;0.999;0.82
+same_speaker;30;0.534;0.477

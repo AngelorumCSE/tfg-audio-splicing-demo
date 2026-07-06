@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Extracción de características por ventana del prototipo intra-fuente.
 
@@ -23,9 +25,14 @@ AUDIO_DIR = Path("data/generated")
 MANIFEST = Path("data/manifests/splicing_manifest.csv")
 OUT_CSV = Path("data/processed/window_features.csv")
 
-SR_ESPERADO = 16000      # frecuencia de muestreo de trabajo (Hz)
-VENTANA_S = 1.0          # longitud de la ventana de análisis (s)
-SALTO_S = 0.5            # desplazamiento entre ventanas consecutivas (s)
+try:
+    import sys as _sys
+    _sys.path.append(str(Path(__file__).resolve().parent))
+    from config import SR as SR_ESPERADO, VENTANA_S, SALTO_S
+except ImportError:
+    SR_ESPERADO = 16000      # frecuencia de muestreo de trabajo (Hz)
+    VENTANA_S = 1.0          # longitud de la ventana de análisis (s)
+    SALTO_S = 0.5            # desplazamiento entre ventanas consecutivas (s)
 SOLAPE_MINIMO_S = 0.25   # solape mínimo con la zona manipulada para etiquetar como sospechosa
 
 OUT_CSV.parent.mkdir(parents=True, exist_ok=True)

@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Entrena y evalúa el clasificador a nivel de archivo (agregando los scores por ventana en un
 tamper score por audio). Forma parte del prototipo intra-fuente inicial.

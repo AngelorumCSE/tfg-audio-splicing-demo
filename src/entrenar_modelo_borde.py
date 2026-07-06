@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Entrena el Random Forest sobre la etiqueta de borde (características base + delta). Es el modelo
 principal del prototipo intra-fuente, orientado a marcar las ventanas próximas a un empalme.
@@ -26,7 +28,18 @@ THRESHOLDS_OUT = Path("reports/evaluacion_umbrales_borde.csv")
 RANDOM_STATE = 42
 RATIO_NEGATIVOS = 3
 
-META_COLS = [
+# Umbral operativo del sistema (seleccionado en el análisis de umbrales de la
+# memoria, sección 6.4). Se persiste junto al modelo para que la inferencia no
+# dependa de valores re-escritos a mano.
+try:
+    import sys as _sys
+    from pathlib import Path as _P
+    _sys.path.append(str(_P(__file__).resolve().parent))
+    from config import DEFAULT_THRESHOLD as UMBRAL_OPERATIVO, META_COLS as _META_CFG
+except ImportError:
+    UMBRAL_OPERATIVO, _META_CFG = 0.50, None
+
+META_COLS = _META_CFG or [
     "id_registro",
     "archivo_generado",
     "archivo_base",
@@ -175,7 +188,11 @@ def main():
             "model": model,
             "feature_cols": feature_cols,
             "meta_cols": META_COLS,
-            "best_threshold": best_umbral,
+            # Umbral operativo con el que trabaja la aplicación y la evaluación
+            # final (0,50); se conserva además el mejor umbral por F1 en la
+            # partición de prueba como referencia.
+            "best_threshold": UMBRAL_OPERATIVO,
+            "best_threshold_f1": best_umbral,
             "target": "etiqueta_borde",
         },
         MODEL_OUT

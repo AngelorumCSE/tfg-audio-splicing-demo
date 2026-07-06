@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Entrena el Random Forest base por ventana usando solo las características de la ventana actual
 (sin diferencias delta). Sirve de línea base del prototipo.

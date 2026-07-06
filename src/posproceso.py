@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Posprocesado de scores por ventana (funciones puras, sin dependencias de modelo).
 
@@ -19,7 +21,7 @@ try:
     import config as C
     MAX_GAP_S, MIN_DURATION_S, RATIO_NEGATIVOS, RANDOM_STATE = (
         C.MAX_GAP_S, C.MIN_DURATION_S, C.RATIO_NEGATIVOS, C.RANDOM_STATE)
-except Exception:  # valores por defecto si config no está disponible
+except ImportError:  # valores por defecto si config no está disponible
     MAX_GAP_S, MIN_DURATION_S, RATIO_NEGATIVOS, RANDOM_STATE = 0.75, 0.50, 3, 42
 
 Intervalo = Tuple[float, float, float]

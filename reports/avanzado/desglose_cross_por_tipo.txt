@@ -1,0 +1,16 @@
+DESGLOSE POR TIPO EN EL UMBRAL OPERATIVO — detector cross-source (OOF, por hablante)
+==============================================================================
+
+Verificación de reproducción: ROC-AUC=0.718 | PR-AUC=0.895 | matriz por archivo @0,50 (TN/FP/FN/TP) = 20/10/33/57
+
+Umbral 0.50:
+  cross_speaker        detección 15/30  localización  6/30
+  cross_speaker_ruido  detección 30/30  localización 30/30
+  same_speaker         detección 12/30  localización  3/30
+  -> SOLO empalmes cross-source (n=60): recall 0.750 | localización 0.600
+
+Umbral 0.30:
+  cross_speaker        detección 30/30  localización 29/30
+  cross_speaker_ruido  detección 30/30  localización 30/30
+  same_speaker         detección 30/30  localización 22/30
+  -> SOLO empalmes cross-source (n=60): recall 1.000 | localización 0.983

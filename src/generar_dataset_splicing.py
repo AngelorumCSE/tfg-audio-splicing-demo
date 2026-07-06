@@ -1,3 +1,5 @@
+# Proyecto desarrollado como parte del Trabajo de Fin de Estudios del Grado en
+# Ingeniería Informática de UNIR (2026). Autor: Ángel Carlos Soler Encinas. Licencia MIT.
 """
 Genera el dataset de splicing intra-fuente a partir de grabaciones propias: crea variantes
 limpias y manipuladas (mismo audio / mismo hablante) y un manifiesto con el ground truth temporal.

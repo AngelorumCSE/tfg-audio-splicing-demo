@@ -1,0 +1,18 @@
+VALIDACIÓN CRUZADA AGRUPADA (out-of-fold) — sin fuga de datos
+======================================================================
+
+Pliegues: 5 (GroupKFold por archivo_base)
+
+AUC (independiente del umbral):
+  Ventana  -> ROC-AUC = 0.532 | PR-AUC = 0.053
+  Archivo  -> ROC-AUC = 0.592 | PR-AUC = 0.746
+
+Métricas por archivo en el umbral 0.5 (out-of-fold):
+  accuracy=0.4286  precision=0.8000  recall=0.1905  f1=0.3077
+  IC95% bootstrap -> F1 (0.13636363636363635, 0.4583504098360655)  |  accuracy (0.31746031746031744, 0.5555555555555556)
+  matriz TN/FP/FN/TP = 19/2/34/8  |  localización 1/42
+
+Tabla completa por umbral en metricas_por_umbral_cv.csv
+
+NOTA: compara estas cifras con la evaluación in-sample de la memoria. La
+diferencia (normalmente a la baja) cuantifica el optimismo del enfoque in-sample.
