@@ -35,6 +35,7 @@ https://tfg-audio-splicing-demo.streamlit.app/
 - `analisis_avanzado/08_desglose_y_ablacion_cross.py`: desglose de detección/localización por tipo de empalme en el umbral operativo y ablación/comparativa de clasificadores sobre el conjunto cross-source (salidas en `reports/avanzado/desglose_cross_por_tipo.*` y `ablacion_baselines_cross.*`). También `make desglose-cross`.
 - `analisis_avanzado/09_comprobacion_espanol.py`: comprobación exploratoria de validez en español con el modelo ya entrenado (Anexo B de la memoria). También `make espanol`.
 - `analisis_avanzado/10_iou_localizacion_cross.py`: localización con criterio estricto (IoU) sobre el conjunto cross-source, out-of-fold (sección 6.8 de la memoria). También `make iou-cross`.
+- `analisis_avanzado/11_transferencia_partialspoof.py`: transferencia exploratoria del detector, sin reentrenar, al benchmark público PartialSpoof (sección 6.9 de la memoria; salidas en `reports/avanzado/transferencia_partialspoof.*`). También `make transferencia`.
 
 - **Coherencia artefacto–memoria**: los bundles joblib persisten ahora el umbral operativo (`best_threshold = 0.50`, el usado en la memoria y la app) y conservan `best_threshold_f1` como referencia; el slider de la app se inicializa con el umbral persistido.
 - Constantes centralizadas: la app y los scripts toman SR/ventana/salto/umbral de `src/config.py` (con valores por defecto si no está disponible).
@@ -48,7 +49,7 @@ https://tfg-audio-splicing-demo.streamlit.app/
 - `Makefile`: orquestador para reproducir el pipeline de extremo a extremo (`make help`).
 - `src/informe_forense.py`: genera un **informe forense en PDF** por audio con hash SHA-256 (cadena de custodia), usado por la app.
 - `src/features_inferencia.py`: pipeline de características por ventana (ventaneo + base + delta) reutilizable en inferencia.
-- `analisis_avanzado/`: análisis de excelencia (validación cruzada y ROC/PR/AUC, ablación, comparativa de modelos, robustez, explicabilidad validación externa y variabilidad entre semillas (`07_multisemilla_libri.py`)). Ver `analisis_avanzado/README.md`.
+- `analisis_avanzado/`: análisis de excelencia (validación cruzada y ROC/PR/AUC, ablación, comparativa de modelos, robustez, explicabilidad, validación externa y variabilidad entre semillas (`07_multisemilla_libri.py`)). Ver `analisis_avanzado/README.md`.
 
 ### Novedades en la aplicación (app_tfg.py)
 
