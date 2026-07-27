@@ -4,12 +4,13 @@ Aplicación de demostración desarrollada para el TFG: **Verificación forense d
 
 > Proyecto desarrollado como parte del **Trabajo de Fin de Estudios del Grado en Ingeniería Informática de UNIR** (2026). Autor: Ángel Carlos Soler Encinas. Código publicado bajo **licencia MIT** (véase `LICENSE`).
 
-La aplicación permite analizar audios de dos formas:
+La aplicación permite analizar audios de tres formas:
 
 1. **Ejemplos precargados**: audios limpios y manipulados incluidos con el proyecto, con ground truth conocido.
 2. **Audio subido por el usuario**: cualquier archivo de audio compatible puede procesarse dinámicamente para obtener una predicción y una curva temporal de sospecha.
+3. **Procesamiento por lotes**: varios audios a la vez, con una tabla-resumen descargable en CSV.
 
-La salida incluye la predicción global, el *tamper score*, los intervalos temporales sospechosos, la curva de scores por ventana, el espectrograma y una tabla descargable con los resultados por ventana.
+La salida incluye la predicción global, el *tamper score*, los intervalos temporales sospechosos, la curva de scores por ventana, el espectrograma, la forma de onda con las zonas marcadas, una tabla descargable con los resultados por ventana y un **informe forense en PDF** con el hash SHA-256 del archivo (cadena de custodia).
 
 ## Demo online
 
@@ -110,12 +111,13 @@ Después se abrirá la aplicación en el navegador.
 1. Seleccionar el modo de análisis en el panel lateral:
    - `Ejemplos precargados`.
    - `Subir audio propio`.
+   - `Procesar lote (varios audios)`.
 2. Seleccionar un ejemplo o subir un archivo de audio.
 3. Ajustar el umbral de decisión si se desea.
 4. Revisar la predicción global: audio limpio o sospechoso/manipulado.
 5. Consultar el *tamper score* y los intervalos sospechosos.
 6. Revisar la curva temporal y el espectrograma.
-7. Descargar los resultados por ventana en CSV si se desea.
+7. Descargar los resultados por ventana en CSV y el informe forense en PDF si se desea.
 
 ## Formatos de audio
 
