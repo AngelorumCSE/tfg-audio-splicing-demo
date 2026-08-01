@@ -28,13 +28,7 @@ Subes una grabación y el sistema te dice **si ha sido manipulada, dónde exacta
 </div>
 
 <div align="center">
-
-| | 🟢 Audio original | 🔴 Audio manipulado |
-|:---|:---:|:---:|
-| **Tamper score** | **0.3683** | **0.7583** |
-| **Intervalo detectado** | — | **34.5 s – 38.0 s** |
-| **Intervalo real** *(ground truth)* | — | 35.46 s – 37.13 s ✅ |
-
+<sub>Y además <b>localiza el empalme</b>: intervalo detectado <b>34.5 s – 38.0 s</b> · intervalo real <b>35.46 s – 37.13 s</b> ✅</sub>
 </div>
 
 <div align="center">
@@ -93,7 +87,7 @@ Cada análisis genera un **PDF firmado con el hash SHA-256 del audio original**.
 <img src="docs/img/informe-forense.png" width="62%" alt="Informe forense generado automáticamente">
 </div>
 
-Incluye metadatos del archivo, hash SHA-256, predicción, *tamper score*, intervalos detectados y aviso legal. Se acompaña de un **CSV con los resultados ventana a ventana**.
+Se acompaña de un **CSV con los resultados ventana a ventana**.
 
 ---
 
@@ -117,11 +111,7 @@ Validación con **GroupKFold por hablante**: el modelo se evalúa siempre con **
 <img src="docs/img/resultados.jpg" width="90%" alt="Resultados por tipo de empalme: 0.999 cambio de entorno, 0.634 otra voz, 0.534 mismo origen">
 </div>
 
-| Escenario | ROC-AUC | Lectura |
-|:---|:---:|:---|
-| 🟢 Fragmento de **otro entorno acústico** | **0.999** | Detección casi perfecta |
-| 🟡 Fragmento de **otra voz**, mismo entorno | 0.634 | Discriminación moderada |
-| 🔴 Fragmento del **mismo audio** | 0.534 | Azar — límite documentado del método |
+Es decir: **detecta casi perfectamente cuando el fragmento viene de otro entorno acústico**, el caso que de verdad importa en un peritaje; y reconoce con honestidad que dentro del mismo audio no es detectable.
 
 **Localización temporal:** 38/90 en umbral operativo estricto · 78/90 en modo cribado.
 
@@ -133,12 +123,7 @@ Validación con **GroupKFold por hablante**: el modelo se evalúa siempre con **
 <img src="docs/img/pipeline.jpg" width="92%" alt="Pipeline: de la señal a la decisión">
 </div>
 
-| Etapa | Detalle |
-|:---|:---|
-| **Características** | **108 por ventana:** 36 descriptores (MFCC, ZCR, RMS, centroide espectral, ancho de banda, rolloff) + **72 deltas** respecto a la ventana anterior y posterior |
-| **Modelo** | Random Forest de 500 árboles — **sin GPU**, elegido por rendir bien con pocos datos y ser interpretable |
-| **Decisión** | Máximo de la curva por archivo · umbral 0.50 fijado con el **índice de Youden** |
-| **Reproducibilidad** | Semilla fija (42), Makefile y tests |
+Los 36 descriptores por ventana son MFCC, ZCR, RMS, centroide espectral, ancho de banda y rolloff; las 72 deltas miden la diferencia con la ventana anterior y la posterior. El umbral de 0.50 se fijó con el **índice de Youden**, y el Random Forest se eligió por rendir bien con pocos datos **y ser interpretable**.
 
 **Las deltas concentran el 66 % de la importancia** del modelo — y permutación y SHAP coinciden. Es decir: el sistema decide por la razón correcta, la discontinuidad, no por el contenido del audio.
 
@@ -186,11 +171,7 @@ Probado frente a las degradaciones que aparecen en material real:
 <img src="docs/img/robustez.jpg" width="90%" alt="Robustez frente a compresión MP3, ruido y remuestreo">
 </div>
 
-| Degradación | Resultado |
-|:---|:---|
-| **Compresión MP3** (128k / 96k / 64k) | ✅ Se mantiene (0.73 – 0.77) |
-| **Ruido aditivo** (30 / 20 / 10 dB) | ✅ Robusto incluso a 10 dB |
-| **Remuestreo a 8 kHz** (banda telefónica) | ❌ Colapsa — límite documentado |
+Aguanta la compresión y el ruido, que es lo que se encuentra en material real. **Colapsa en banda telefónica (8 kHz)** — un límite que está medido y documentado, no escondido.
 
 ---
 
@@ -261,12 +242,7 @@ El modelo se persiste con `joblib` como **bundle completo** (clasificador, colum
 <img src="docs/img/datos.jpg" width="90%" alt="Cuatro conjuntos de datos, cuatro papeles">
 </div>
 
-| Conjunto | Volumen | Papel |
-|:---|:---|:---|
-| Grabaciones propias | 63 audios · 4 hablantes · 5.194 ventanas | Desarrollo y diagnóstico |
-| **LibriSpeech** | 120 audios · 30 bases × 4 versiones · 9.289 ventanas | **Validación principal** — 10 voces reservadas solo para inserciones |
-| Nota de voz real en español | 1 audio (con consentimiento) | Comprobar que el principio no depende del idioma |
-| PartialSpoof | 496 audios | Límite del dominio: voz sintética, transferencia nula |
+La validación principal se apoya en **LibriSpeech**, con **10 voces reservadas exclusivamente para las inserciones** y evaluación por hablante, de modo que el modelo nunca se examina con una voz que haya visto entrenando.
 
 ---
 
