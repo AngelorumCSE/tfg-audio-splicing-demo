@@ -4,11 +4,14 @@
 
 **Detecta si una grabación de voz ha sido manipulada, señala en qué segundo, y genera un informe pericial con hash SHA-256.**
 
-[![Demo online](https://img.shields.io/badge/▶_Probar_demo-online-brightgreen?style=for-the-badge)](https://tfg-audio-splicing-demo.streamlit.app/)
-[![Python](https://img.shields.io/badge/Python-3.10-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-Random_Forest-F7931E?style=flat&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-desplegado-FF4B4B?style=flat&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Demo online](https://img.shields.io/badge/▶_PROBAR_LA_DEMO-online-2ea44f?style=for-the-badge)](https://tfg-audio-splicing-demo.streamlit.app/)
+
+[![Python](https://img.shields.io/badge/Python-3.10-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-Random_Forest-F7931E?style=flat-square&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
+[![librosa](https://img.shields.io/badge/librosa-audio-8A2BE2?style=flat-square)](https://librosa.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-desplegado-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![ROC-AUC](https://img.shields.io/badge/ROC--AUC-0.72_(0.999_caso_fuerte)-informational?style=flat-square)](#-resultados)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
 *Manipular un audio hoy lo puede hacer cualquiera. **Demostrar que no ha sido manipulado, no.***
 
@@ -36,7 +39,7 @@ Subes una grabación y el sistema te dice **si ha sido manipulada, dónde exacta
 
 <div align="center">
 <img src="docs/img/demo.gif" width="90%" alt="Demostración: análisis de un audio manipulado, curva de sospecha y localización del empalme">
-<br><sub><i>Análisis real de un audio manipulado: el pico de sospecha cae justo sobre el empalme.</i></sub>
+<br><sub><i>Análisis real: el pico de sospecha cae justo sobre el empalme.</i></sub>
 </div>
 
 ---
@@ -46,25 +49,23 @@ Subes una grabación y el sistema te dice **si ha sido manipulada, dónde exacta
 El *audio splicing* consiste en insertar un fragmento de voz en otra grabación para alterar su mensaje. Aparece en:
 
 | Ámbito | Problema real |
-|---|---|
+|:---|:---|
 | ⚖️ **Peritaje judicial** | Un audio aportado como prueba: ¿es íntegro? ¿qué segundos revisar? |
 | 🏦 **Fraude e identidad** | Suplantación de voz en banca telefónica y verificación de clientes |
 | 📰 **Medios y verificación** | Declaraciones editadas que cambian de sentido |
 | 🔐 **Respuesta a incidentes** | Cribado rápido de grandes volúmenes de material |
 
-**El objetivo no es sustituir al perito, sino decirle qué archivos y qué segundos mirar primero.**
+> **El objetivo no es sustituir al perito, sino decirle qué archivos y qué segundos mirar primero.**
+
+<div align="center">
+<img src="docs/img/anatomia.jpg" width="88%" alt="Anatomía del audio splicing: qué es, por qué es difícil y por qué es abordable">
+</div>
 
 ---
 
 ## 🔍 La detección, en detalle
 
-Así se ve el resultado completo de un análisis:
-
-<div align="center">
-<img src="docs/img/resultado-manipulado.png" width="90%" alt="Resultado del análisis de un audio manipulado">
-</div>
-
-El pico de sospecha aparece **exactamente sobre el empalme**. En verde el intervalo real; en rojo, el que predice el sistema:
+El pico de sospecha aparece **exactamente sobre el empalme**. En azul el intervalo real; en rojo, el que predice el sistema:
 
 <div align="center">
 <img src="docs/img/curva-deteccion.png" width="85%" alt="Curva temporal del score de sospecha">
@@ -85,7 +86,11 @@ La misma zona, marcada sobre el espectrograma:
 Cada análisis genera un **PDF firmado con el hash SHA-256 del audio original**. Así la salida deja de ser una predicción y pasa a ser **un documento verificable**, incorporable a una cadena de custodia.
 
 <div align="center">
-<img src="docs/img/informe-forense.png" width="75%" alt="Informe forense generado automáticamente">
+<img src="docs/img/cadena-custodia.jpg" width="88%" alt="Cadena de custodia: del audio original al informe forense con hash SHA-256">
+</div>
+
+<div align="center">
+<img src="docs/img/informe-forense.png" width="62%" alt="Informe forense generado automáticamente">
 </div>
 
 Incluye metadatos del archivo, hash SHA-256, predicción, *tamper score*, intervalos detectados y aviso legal. Se acompaña de un **CSV con los resultados ventana a ventana**.
@@ -108,6 +113,10 @@ Validación con **GroupKFold por hablante**: el modelo se evalúa siempre con **
 
 **El detector se comporta exactamente como predecía la teoría:**
 
+<div align="center">
+<img src="docs/img/resultados.jpg" width="90%" alt="Resultados por tipo de empalme: 0.999 cambio de entorno, 0.634 otra voz, 0.534 mismo origen">
+</div>
+
 | Escenario | ROC-AUC | Lectura |
 |:---|:---:|:---|
 | 🟢 Fragmento de **otro entorno acústico** | **0.999** | Detección casi perfecta |
@@ -120,11 +129,9 @@ Validación con **GroupKFold por hablante**: el modelo se evalúa siempre con **
 
 ## ⚙️ Cómo funciona
 
-```
-Audio ──► Normalización 16 kHz mono ──► Ventanas de 1 s (salto 0,5 s)
-      ──► 108 características ──► Random Forest (500 árboles)
-      ──► Curva de sospecha ──► Decisión e intervalos por archivo
-```
+<div align="center">
+<img src="docs/img/pipeline.jpg" width="92%" alt="Pipeline: de la señal a la decisión">
+</div>
 
 | Etapa | Detalle |
 |:---|:---|
@@ -144,12 +151,7 @@ Mi primera evaluación daba un **F1 de 0.84**. Buen número, mal medido.
 De cada grabación base salían tres archivos casi idénticos. Al repartirlos entre entrenamiento y prueba, el modelo se examinaba con audios cuya grabación de origen ya conocía: **fuga de datos** que afectaba a **45 de los 63 archivos**.
 
 <div align="center">
-
-| | F1 por archivo |
-|:---|:---:|
-| In-sample *(con fuga)* | 0.84 ❌ |
-| **Out-of-fold real** | **0.31** ✅ |
-
+<img src="docs/img/fuga-datos.jpg" width="90%" alt="El espejismo y la realidad: F1 de 0.84 in-sample frente a 0.31 out-of-fold">
 </div>
 
 En lugar de ocultarlo, **documenté el fallo, corregí el protocolo de validación y usé el hallazgo** para confirmar la hipótesis de que los empalmes del mismo audio no son detectables con este método. A partir de ahí reorienté el trabajo al caso que sí se detecta y que además importa en un peritaje.
@@ -180,15 +182,15 @@ No es un único experimento con una métrica: el repositorio incluye **11 análi
 
 Probado frente a las degradaciones que aparecen en material real:
 
+<div align="center">
+<img src="docs/img/robustez.jpg" width="90%" alt="Robustez frente a compresión MP3, ruido y remuestreo">
+</div>
+
 | Degradación | Resultado |
 |:---|:---|
 | **Compresión MP3** (128k / 96k / 64k) | ✅ Se mantiene (0.73 – 0.77) |
 | **Ruido aditivo** (30 / 20 / 10 dB) | ✅ Robusto incluso a 10 dB |
 | **Remuestreo a 8 kHz** (banda telefónica) | ❌ Colapsa — límite documentado |
-
-<div align="center">
-<img src="docs/img/robustez.png" width="80%" alt="Robustez del detector frente a degradaciones">
-</div>
 
 ---
 
@@ -255,12 +257,26 @@ El modelo se persiste con `joblib` como **bundle completo** (clasificador, colum
 
 ## 📚 Datos
 
+<div align="center">
+<img src="docs/img/datos.jpg" width="90%" alt="Cuatro conjuntos de datos, cuatro papeles">
+</div>
+
 | Conjunto | Volumen | Papel |
 |:---|:---|:---|
 | Grabaciones propias | 63 audios · 4 hablantes · 5.194 ventanas | Desarrollo y diagnóstico |
 | **LibriSpeech** | 120 audios · 30 bases × 4 versiones · 9.289 ventanas | **Validación principal** — 10 voces reservadas solo para inserciones |
 | Nota de voz real en español | 1 audio (con consentimiento) | Comprobar que el principio no depende del idioma |
 | PartialSpoof | 496 audios | Límite del dominio: voz sintética, transferencia nula |
+
+---
+
+## 🗺️ Dónde encaja frente al estado del arte
+
+<div align="center">
+<img src="docs/img/estado-del-arte.jpg" width="88%" alt="Estado del arte: cuatro familias según qué localizan y cuánto pesan sus modelos">
+</div>
+
+Las aproximaciones existentes o **detectan sin localizar**, o **localizan pero exigen corpus masivos y modelos pesados**. Este trabajo ocupa el hueco práctico: **localiza el empalme con un modelo ligero e interpretable**, auditable en un contexto pericial.
 
 ---
 
@@ -278,12 +294,15 @@ Este sistema es un **apoyo al cribado pericial, nunca un dictamen**. La decisió
 
 ### Sobre el proyecto
 
-Trabajo Fin de Grado en **Ingeniería Informática** — Universidad Internacional de La Rioja (UNIR), julio de 2026 · Calificación **9,0**
+Trabajo Fin de Grado en **Ingeniería Informática**<br>
+Universidad Internacional de La Rioja (UNIR) · julio de 2026 · Calificación **9,0**
 
 **Ángel Carlos Soler Encinas** · Directora: Josefina Guerrero García
 
 Licencia [MIT](LICENSE)
 
-[![Demo](https://img.shields.io/badge/▶_Probar_la_demo-brightgreen?style=for-the-badge)](https://tfg-audio-splicing-demo.streamlit.app/)
+<br>
+
+[![Demo](https://img.shields.io/badge/▶_PROBAR_LA_DEMO-2ea44f?style=for-the-badge)](https://tfg-audio-splicing-demo.streamlit.app/)
 
 </div>
