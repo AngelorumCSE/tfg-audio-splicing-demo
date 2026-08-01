@@ -1,140 +1,282 @@
-# Detector de manipulación por splicing en audio
+<div align="center">
 
-Aplicación de demostración desarrollada para el TFG: **Verificación forense de grabaciones de audio mediante IA: detección y localización de manipulaciones**.
+# 🎙️ Detección forense de manipulaciones en audio con IA
 
-> Proyecto desarrollado como parte del **Trabajo de Fin de Estudios del Grado en Ingeniería Informática de UNIR** (2026). Autor: Ángel Carlos Soler Encinas. Código publicado bajo **licencia MIT** (véase `LICENSE`).
+**Detecta si una grabación de voz ha sido manipulada, señala en qué segundo, y genera un informe pericial con hash SHA-256.**
 
-La aplicación permite analizar audios de tres formas:
+[![Demo online](https://img.shields.io/badge/▶_Probar_demo-online-brightgreen?style=for-the-badge)](https://tfg-audio-splicing-demo.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.10-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-Random_Forest-F7931E?style=flat&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-desplegado-FF4B4B?style=flat&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-1. **Ejemplos precargados**: audios limpios y manipulados incluidos con el proyecto, con ground truth conocido.
-2. **Audio subido por el usuario**: cualquier archivo de audio compatible puede procesarse dinámicamente para obtener una predicción y una curva temporal de sospecha.
-3. **Procesamiento por lotes**: varios audios a la vez, con una tabla-resumen descargable en CSV.
+*Manipular un audio hoy lo puede hacer cualquiera. **Demostrar que no ha sido manipulado, no.***
 
-La salida incluye la predicción global, el *tamper score*, los intervalos temporales sospechosos, la curva de scores por ventana, el espectrograma, la forma de onda con las zonas marcadas, una tabla descargable con los resultados por ventana y un **informe forense en PDF** con el hash SHA-256 del archivo (cadena de custodia).
+</div>
 
-## Demo online
+---
 
-La aplicación puede probarse desde el siguiente enlace:
+## ⚡ En 30 segundos
 
-https://tfg-audio-splicing-demo.streamlit.app/
+Subes una grabación y el sistema te dice **si ha sido manipulada, dónde exactamente y con qué nivel de confianza** — y te lo entrega como documento verificable.
 
-## Contenido de la carpeta
+| | Audio limpio | Audio manipulado |
+|---|---|---|
+| **Predicción** | 🟢 Audio limpio | 🔴 Sospechoso / manipulado |
+| **Tamper score** | **0.3683** | **0.7583** |
+| **Intervalo detectado** | — | **34.5 s – 38.0 s** |
+| **Intervalo real** *(ground truth)* | — | 35.46 s – 37.13 s ✅ |
 
-- `app_tfg.py`: aplicación principal desarrollada con Streamlit. Incluye comentarios explicativos del pipeline de inferencia.
-- `requirements.txt`: librerías necesarias para ejecutar la aplicación.
-- `src/`: scripts empleados durante el desarrollo experimental: generación del dataset, extracción de características, entrenamiento y evaluación.
-- `data/demo/`: ejemplos precargados de la aplicación (12 audios cross-source de LibriSpeech con su manifiesto y características). Se regeneran con `preparar_ejemplos_demo.py`; la app los usa automáticamente si existen.
-- `data/generated/`: muestra de audios del dataset intra-fuente original, incluida únicamente en la entrega académica (no se publica en el repositorio por contener voz de personas identificables). El conjunto completo se regenera con `src/generar_dataset_splicing.py` a partir de las grabaciones originales.
-- `data/processed/window_features_borde.csv`: características por ventana del experimento intra-fuente completo (5 194 ventanas; evidencia de las secciones 5.3 a 5.5 de la memoria).
-- `data/libri/`: conjunto cross-source derivado de LibriSpeech (120 audios, manifiesto y características por ventana; sección 6.8 de la memoria).
-- `data/manifests/splicing_manifest.csv`: manifiesto del dataset intra-fuente con el ground truth.
-- `models/`: modelos entrenados (`modelo_libri.joblib` es el que usa la aplicación; `random_forest_borde.joblib`, el del experimento intra-fuente).
-- `reports/`: métricas y gráficos finales del experimento.
+<div align="center">
+<img src="docs/img/demo.gif" width="90%" alt="Demostración: análisis de un audio manipulado, curva de sospecha y localización del empalme">
+<br><sub><i>Análisis real de un audio manipulado: el pico de sospecha cae justo sobre el empalme.</i></sub>
+</div>
 
-### Novedades de esta versión (mejoras de ingeniería y rigor)
+---
 
-- `analisis_avanzado/08_desglose_y_ablacion_cross.py`: desglose de detección/localización por tipo de empalme en el umbral operativo y ablación/comparativa de clasificadores sobre el conjunto cross-source (salidas en `reports/avanzado/desglose_cross_por_tipo.*` y `ablacion_baselines_cross.*`). También `make desglose-cross`.
-- `analisis_avanzado/09_comprobacion_espanol.py`: comprobación exploratoria de validez en español con el modelo ya entrenado (Anexo B de la memoria). También `make espanol`.
-- `analisis_avanzado/10_iou_localizacion_cross.py`: localización con criterio estricto (IoU) sobre el conjunto cross-source, out-of-fold (sección 6.8 de la memoria). También `make iou-cross`.
-- `analisis_avanzado/11_transferencia_partialspoof.py`: transferencia exploratoria del detector, sin reentrenar, al benchmark público PartialSpoof (sección 6.9 de la memoria; salidas en `reports/avanzado/transferencia_partialspoof.*`). También `make transferencia`.
+## 🎯 Para qué sirve
 
-- **Coherencia artefacto–memoria**: los bundles joblib persisten ahora el umbral operativo (`best_threshold = 0.50`, el usado en la memoria y la app) y conservan `best_threshold_f1` como referencia; el slider de la app se inicializa con el umbral persistido.
-- Constantes centralizadas: la app y los scripts toman SR/ventana/salto/umbral de `src/config.py` (con valores por defecto si no está disponible).
-- `src/evaluar_por_archivo_borde.py` usa el umbral operativo de `config.py` (antes tenía 0.30 hardcodeado de una fase intermedia).
-- Pruebas ampliadas (9): cobertura de `balancear_train`, fusión por `max_gap` e IoU sin solape.
+El *audio splicing* consiste en insertar un fragmento de voz en otra grabación para alterar su mensaje. Aparece en:
 
-- `src/config.py`: configuración central (rutas, frecuencia de muestreo, geometría de ventana, semilla, umbrales y parámetros del modelo). Elimina los números «mágicos» repetidos entre scripts.
-- `src/posproceso.py`: lógica pura de posprocesado (agrupación de intervalos, solape, IoU y balanceo), aislada de scikit-learn para poder probarse de forma unitaria.
-- `src/evaluar_por_archivo_cv.py`: **evaluación por archivo sin fuga de datos** mediante validación cruzada agrupada (GroupKFold por `archivo_base`). Es la verificación rigurosa recomendada (ver más abajo).
-- `tests/test_posproceso.py`: pruebas unitarias de la lógica de posprocesado.
-- `Makefile`: orquestador para reproducir el pipeline de extremo a extremo (`make help`).
-- `src/informe_forense.py`: genera un **informe forense en PDF** por audio con hash SHA-256 (cadena de custodia), usado por la app.
-- `src/features_inferencia.py`: pipeline de características por ventana (ventaneo + base + delta) reutilizable en inferencia.
-- `analisis_avanzado/`: análisis de excelencia (validación cruzada y ROC/PR/AUC, ablación, comparativa de modelos, robustez, explicabilidad, validación externa y variabilidad entre semillas (`07_multisemilla_libri.py`)). Ver `analisis_avanzado/README.md`.
+| Ámbito | Problema real |
+|---|---|
+| ⚖️ **Peritaje judicial** | Un audio aportado como prueba: ¿es íntegro? ¿qué segundos revisar? |
+| 🏦 **Fraude e identidad** | Suplantación de voz en banca telefónica y verificación de clientes |
+| 📰 **Medios y verificación** | Declaraciones editadas que cambian de sentido |
+| 🔐 **Respuesta a incidentes** | Cribado rápido de grandes volúmenes de material |
 
-### Novedades en la aplicación (app_tfg.py)
+**El objetivo no es sustituir al perito, sino decirle qué archivos y qué segundos mirar primero.**
 
-- Descarga de **informe forense en PDF** (con hash SHA-256) para cada audio analizado.
-- **Procesamiento por lotes**: varios audios con tabla-resumen descargable.
-- Visualización de los intervalos sospechosos sobre la **forma de onda**, además del espectrograma.
+---
 
-## Validación sin fuga de datos (recomendada)
+## 🔍 La detección, en detalle
 
-La evaluación por archivo reportada en la memoria (`evaluar_umbrales_por_archivo_borde.py`) puntúa los 63 archivos con un modelo entrenado sobre 15 de los 21 audios base; por tanto, ~45 de esos archivos pertenecen a audios vistos en entrenamiento y sus métricas son una estimación **optimista** (in-sample).
+Así se ve el resultado completo de un análisis:
 
-Para una estimación honesta de la generalización, ejecuta:
+<div align="center">
+<img src="docs/img/resultado-manipulado.png" width="90%" alt="Resultado del análisis de un audio manipulado">
+</div>
 
-```bash
-python3 src/evaluar_por_archivo_cv.py        # GroupKFold por archivo_base (out-of-fold)
+El pico de sospecha aparece **exactamente sobre el empalme**. En verde el intervalo real; en rojo, el que predice el sistema:
+
+<div align="center">
+<img src="docs/img/curva-deteccion.png" width="85%" alt="Curva temporal del score de sospecha">
+</div>
+
+La misma zona, marcada sobre el espectrograma:
+
+<div align="center">
+<img src="docs/img/espectrograma.png" width="85%" alt="Espectrograma con la zona manipulada marcada">
+</div>
+
+> **La idea central:** lo que delata un empalme no es lo que suena, sino **el salto entre un fragmento y el siguiente**. Cambia el ruido de fondo, el timbre y la reverberación de la sala — aunque el oído no lo perciba.
+
+---
+
+## 📄 Informe pericial con cadena de custodia
+
+Cada análisis genera un **PDF firmado con el hash SHA-256 del audio original**. Así la salida deja de ser una predicción y pasa a ser **un documento verificable**, incorporable a una cadena de custodia.
+
+<div align="center">
+<img src="docs/img/informe-forense.png" width="75%" alt="Informe forense generado automáticamente">
+</div>
+
+Incluye metadatos del archivo, hash SHA-256, predicción, *tamper score*, intervalos detectados y aviso legal. Se acompaña de un **CSV con los resultados ventana a ventana**.
+
+---
+
+## 📊 Resultados
+
+Validación con **GroupKFold por hablante**: el modelo se evalúa siempre con **voces que nunca ha visto**. Sin fuga de datos.
+
+<div align="center">
+
+| Métrica | Valor |
+|:---|:---:|
+| **ROC-AUC por archivo** | **0.722** |
+| **PR-AUC** | **0.896** |
+| Estabilidad entre semillas | 0.71 ± 0.02 |
+
+</div>
+
+**El detector se comporta exactamente como predecía la teoría:**
+
+| Escenario | ROC-AUC | Lectura |
+|:---|:---:|:---|
+| 🟢 Fragmento de **otro entorno acústico** | **0.999** | Detección casi perfecta |
+| 🟡 Fragmento de **otra voz**, mismo entorno | 0.634 | Discriminación moderada |
+| 🔴 Fragmento del **mismo audio** | 0.534 | Azar — límite documentado del método |
+
+**Localización temporal:** 38/90 en umbral operativo estricto · 78/90 en modo cribado.
+
+---
+
+## ⚙️ Cómo funciona
+
+```
+Audio ──► Normalización 16 kHz mono ──► Ventanas de 1 s (salto 0,5 s)
+      ──► 108 características ──► Random Forest (500 árboles)
+      ──► Curva de sospecha ──► Decisión e intervalos por archivo
 ```
 
-Cada archivo se puntúa con un modelo que **no** vio su audio base. Comparar `reports/evaluacion_por_archivo_cv.csv` con la evaluación in-sample permite cuantificar el optimismo de esta última. Este es el procedimiento citado en el apartado de limitaciones de la memoria.
+| Etapa | Detalle |
+|:---|:---|
+| **Características** | **108 por ventana:** 36 descriptores (MFCC, ZCR, RMS, centroide espectral, ancho de banda, rolloff) + **72 deltas** respecto a la ventana anterior y posterior |
+| **Modelo** | Random Forest de 500 árboles — **sin GPU**, elegido por rendir bien con pocos datos y ser interpretable |
+| **Decisión** | Máximo de la curva por archivo · umbral 0.50 fijado con el **índice de Youden** |
+| **Reproducibilidad** | Semilla fija (42), Makefile y tests |
 
-## Pruebas
+**Las deltas concentran el 66 % de la importancia** del modelo — y permutación y SHAP coinciden. Es decir: el sistema decide por la razón correcta, la discontinuidad, no por el contenido del audio.
+
+---
+
+## 🧪 La parte que más me enseñó
+
+Mi primera evaluación daba un **F1 de 0.84**. Buen número, mal medido.
+
+De cada grabación base salían tres archivos casi idénticos. Al repartirlos entre entrenamiento y prueba, el modelo se examinaba con audios cuya grabación de origen ya conocía: **fuga de datos** que afectaba a **45 de los 63 archivos**.
+
+<div align="center">
+
+| | F1 por archivo |
+|:---|:---:|
+| In-sample *(con fuga)* | 0.84 ❌ |
+| **Out-of-fold real** | **0.31** ✅ |
+
+</div>
+
+En lugar de ocultarlo, **documenté el fallo, corregí el protocolo de validación y usé el hallazgo** para confirmar la hipótesis de que los empalmes del mismo audio no son detectables con este método. A partir de ahí reorienté el trabajo al caso que sí se detecta y que además importa en un peritaje.
+
+Es la principal aportación metodológica del proyecto.
+
+---
+
+## 🔬 Rigor de la evaluación
+
+No es un único experimento con una métrica: el repositorio incluye **11 análisis independientes** (`analisis_avanzado/`).
+
+| Análisis | Qué comprueba |
+|:---|:---|
+| **Validación cruzada agrupada** | GroupKFold por hablante — sin fuga de datos |
+| **Ablación y baselines** | Qué aporta cada bloque de características frente a referencias |
+| **Robustez** | Compresión MP3, ruido aditivo y remuestreo |
+| **Explicabilidad** | Importancia por permutación **y** SHAP (coinciden) |
+| **Multisemilla** | Estabilidad del resultado entre semillas |
+| **Desglose cross-source** | Rendimiento según el origen del fragmento insertado |
+| **IoU de localización** | Solape real entre intervalo predicho y ground truth |
+| **Validación externa** | Nota de voz real en español, fuera del corpus |
+| **Transferencia** | PartialSpoof (voz sintética) — límite documentado |
+
+---
+
+## 🛡️ Robustez
+
+Probado frente a las degradaciones que aparecen en material real:
+
+| Degradación | Resultado |
+|:---|:---|
+| **Compresión MP3** (128k / 96k / 64k) | ✅ Se mantiene (0.73 – 0.77) |
+| **Ruido aditivo** (30 / 20 / 10 dB) | ✅ Robusto incluso a 10 dB |
+| **Remuestreo a 8 kHz** (banda telefónica) | ❌ Colapsa — límite documentado |
+
+<div align="center">
+<img src="docs/img/robustez.png" width="80%" alt="Robustez del detector frente a degradaciones">
+</div>
+
+---
+
+## 🚀 Instalación y uso
+
+Requiere **Python 3.10 o superior**.
 
 ```bash
-python3 tests/test_posproceso.py      # runner mínimo, sin dependencias extra
-# o, si tienes pytest:  python3 -m pytest tests/ -q
-```
-
-## Reproducibilidad (Makefile)
-
-```bash
-make help     # lista los objetivos disponibles
-make all      # dataset -> features -> labels -> train -> eval -> summary
-make cv       # evaluación sin fuga de datos
-make test     # pruebas unitarias
-```
-
-## Instalación local
-
-Se recomienda usar Python 3.10 o superior.
-
-Instalar dependencias:
-
-```bash
+git clone https://github.com/AngelorumCSE/tfg-audio-splicing-demo.git
+cd tfg-audio-splicing-demo
 python3 -m pip install -r requirements.txt
-```
-
-## Ejecución local
-
-Desde esta carpeta, ejecutar:
-
-```bash
 python3 -m streamlit run app_tfg.py
 ```
 
-Después se abrirá la aplicación en el navegador.
+**Tres modos de análisis:**
 
-## Uso
+| Modo | Qué hace |
+|:---|:---|
+| 📁 **Ejemplos precargados** | Audios con *ground truth* conocido, para verificar el sistema |
+| 🎵 **Audio propio** | Sube cualquier grabación y obtén predicción, intervalos e informe |
+| 📊 **Procesamiento por lotes** | Tabla-resumen con predicción y *tamper score* de varios audios |
 
-1. Seleccionar el modo de análisis en el panel lateral:
-   - `Ejemplos precargados`.
-   - `Subir audio propio`.
-   - `Procesar lote (varios audios)`.
-2. Seleccionar un ejemplo o subir un archivo de audio.
-3. Ajustar el umbral de decisión si se desea.
-4. Revisar la predicción global: audio limpio o sospechoso/manipulado.
-5. Consultar el *tamper score* y los intervalos sospechosos.
-6. Revisar la curva temporal y el espectrograma.
-7. Descargar los resultados por ventana en CSV y el informe forense en PDF si se desea.
+**Formatos:** WAV, FLAC y OGG recomendados. MP3 y M4A se convierten internamente a WAV mono 16 kHz con FFmpeg. La versión web limita a 20 MB y analiza los primeros 120 s.
 
-## Formatos de audio
+---
 
-Formatos recomendados: WAV, FLAC u OGG. También se permite subir MP3/M4A, aunque su correcta carga puede depender del backend de audio disponible en el entorno donde se ejecute la aplicación.
+## 📁 Estructura
 
-## Criterio de decisión
+```
+app_tfg.py               Aplicación Streamlit (pipeline de inferencia comentado)
+Makefile                 Orquestador del pipeline completo (make all)
+requirements.txt         Dependencias con versiones fijadas
 
-El umbral operativo del sistema es **0.50**, seleccionado en la memoria (análisis de umbrales, evitando el punto degenerado de umbrales bajos y atendiendo al equilibrio entre verdaderos y falsos positivos). Este umbral operativo se persiste como `best_threshold` dentro de los bundles joblib, de modo que la aplicación y cualquier script de inferencia usan por defecto el mismo criterio que la memoria; como referencia se conserva también `best_threshold_f1` (el mejor umbral por F1 en validación, más sensible pero con muchos más falsos positivos).
+src/                     Generación del dataset, extracción de características,
+                         etiquetado, entrenamiento y evaluación
+analisis_avanzado/       11 scripts de análisis: validación cruzada, ablación,
+                         robustez, explicabilidad (SHAP + permutación),
+                         multisemilla, IoU de localización y transferencia
+reconstruccion/          Reproducción del experimento cross-source (LibriSpeech)
+tests/                   Tests del pipeline
 
-## Limitaciones
+data/demo/               Ejemplos precargados de la aplicación
+data/libri/              Conjunto cross-source derivado de LibriSpeech
+data/processed/          Características por ventana
+data/manifests/          Manifiestos con ground truth temporal
+models/                  Bundles entrenados (clasificador + columnas + umbral)
+reports/                 Métricas, gráficos y capturas del experimento
+```
 
-Esta aplicación es una prueba de concepto. El dataset empleado es reducido y las manipulaciones se han generado de forma controlada. Para audios subidos por el usuario no existe ground truth, por lo que la salida debe interpretarse como una ayuda de cribado y no como una herramienta forense definitiva.
+### Reproducir el experimento completo
 
-## Robustez en audios subidos
+Todo el pipeline está orquestado con `make` y semilla fija, de extremo a extremo:
 
-La demo web admite WAV, MP3, M4A, OGG y FLAC. Para evitar errores de códec en Streamlit Community Cloud, los audios subidos se convierten temporalmente a WAV mono 16 kHz mediante FFmpeg cuando es necesario. Además, la versión web limita la subida a 20 MB y analiza como máximo los primeros 120 segundos para evitar agotar la memoria del servidor.
+```bash
+make all        # dataset → características → etiquetas → entrenamiento → evaluación
+make test       # tests del pipeline
+make app        # lanza la aplicación
+make help       # todos los objetivos disponibles
+```
 
-## Licencia
+El modelo se persiste con `joblib` como **bundle completo** (clasificador, columnas esperadas y umbral), de modo que la aplicación y el experimento usan exactamente la misma configuración. **No es una demo simulada:** carga el mismo modelo entrenado.
 
-Este proyecto se distribuye bajo licencia MIT (archivo `LICENSE`). Desarrollado como parte del Trabajo de Fin de Estudios del Grado en Ingeniería Informática de UNIR.
+---
+
+## 📚 Datos
+
+| Conjunto | Volumen | Papel |
+|:---|:---|:---|
+| Grabaciones propias | 63 audios · 4 hablantes · 5.194 ventanas | Desarrollo y diagnóstico |
+| **LibriSpeech** | 120 audios · 30 bases × 4 versiones · 9.289 ventanas | **Validación principal** — 10 voces reservadas solo para inserciones |
+| Nota de voz real en español | 1 audio (con consentimiento) | Comprobar que el principio no depende del idioma |
+| PartialSpoof | 496 audios | Límite del dominio: voz sintética, transferencia nula |
+
+---
+
+## ⚠️ Alcance y limitaciones
+
+Este sistema es un **apoyo al cribado pericial, nunca un dictamen**. La decisión final siempre corresponde a una persona.
+
+**Fuera del dominio:** empalmes del mismo audio, banda estrecha (8 kHz) y voz parcialmente sintética. Los datasets son de tamaño moderado y las manipulaciones se generaron de forma controlada.
+
+**Líneas de trabajo futuras:** corpus reales con recalibración por dominio · detección *copy-move* mediante auto-similitud · recompresión y cambios de velocidad · comparación rigurosa con *deep learning* cuando haya datos suficientes.
+
+---
+
+<div align="center">
+
+### Sobre el proyecto
+
+Trabajo Fin de Grado en **Ingeniería Informática** — Universidad Internacional de La Rioja (UNIR), julio de 2026 · Calificación **9,0**
+
+**Ángel Carlos Soler Encinas** · Directora: Josefina Guerrero García
+
+Licencia [MIT](LICENSE)
+
+[![Demo](https://img.shields.io/badge/▶_Probar_la_demo-brightgreen?style=for-the-badge)](https://tfg-audio-splicing-demo.streamlit.app/)
+
+</div>
