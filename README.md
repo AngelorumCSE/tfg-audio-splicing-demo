@@ -20,12 +20,19 @@
 
 Subes una grabación y el sistema te dice **si ha sido manipulada, dónde exactamente y con qué nivel de confianza** — y te lo entrega como documento verificable.
 
-| | Audio limpio | Audio manipulado |
-|---|---|---|
-| **Predicción** | 🟢 Audio limpio | 🔴 Sospechoso / manipulado |
+<div align="center">
+<img src="docs/img/comparativa.png" width="92%" alt="Comparación: el mismo audio antes y después de ser manipulado">
+</div>
+
+<div align="center">
+
+| | 🟢 Audio original | 🔴 Audio manipulado |
+|:---|:---:|:---:|
 | **Tamper score** | **0.3683** | **0.7583** |
 | **Intervalo detectado** | — | **34.5 s – 38.0 s** |
 | **Intervalo real** *(ground truth)* | — | 35.46 s – 37.13 s ✅ |
+
+</div>
 
 <div align="center">
 <img src="docs/img/demo.gif" width="90%" alt="Demostración: análisis de un audio manipulado, curva de sospecha y localización del empalme">
@@ -66,7 +73,7 @@ El pico de sospecha aparece **exactamente sobre el empalme**. En verde el interv
 La misma zona, marcada sobre el espectrograma:
 
 <div align="center">
-<img src="docs/img/espectrograma.png" width="85%" alt="Espectrograma con la zona manipulada marcada">
+<img src="docs/img/espectrograma.jpg" width="80%" alt="Espectrograma con la zona manipulada marcada">
 </div>
 
 > **La idea central:** lo que delata un empalme no es lo que suena, sino **el salto entre un fragmento y el siguiente**. Cambia el ruido de fondo, el timbre y la reverberación de la sala — aunque el oído no lo perciba.
