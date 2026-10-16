@@ -1,0 +1,33 @@
+Resumen final del modelo de detección de bordes
+============================================================
+
+Umbral seleccionado: 0.5
+
+Motivo de selección:
+Se selecciona el umbral 0.50 por ofrecer el mejor equilibrio general entre detección de audios manipulados y reducción de falsos positivos. Frente a umbrales más bajos, reduce notablemente los falsos positivos; frente a umbrales más altos, mantiene una mayor sensibilidad.
+
+Métricas con el umbral seleccionado:
+Accuracy:  0.7778
+Precision: 0.8182
+Recall:    0.8571
+F1-score:  0.8372
+
+Matriz de confusión:
+[[TN FP]
+ [FN TP]]
+[[13  8]
+ [ 6 36]]
+
+Interpretación:
+- Verdaderos negativos, audios limpios correctamente clasificados: 13
+- Falsos positivos, audios limpios marcados como sospechosos: 8
+- Falsos negativos, audios manipulados no detectados: 6
+- Verdaderos positivos, audios manipulados detectados: 36
+
+Localización temporal:
+El sistema localizó correctamente la región manipulada en 30/42 audios manipulados.
+Tasa de localización: 0.7143
+
+Archivos generados:
+- reports/final/metricas_por_umbral.png
+- reports/final/matriz_confusion_umbral_050.png

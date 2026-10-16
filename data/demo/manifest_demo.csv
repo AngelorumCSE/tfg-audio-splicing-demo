@@ -1,0 +1,13 @@
+id_registro;archivo_generado;archivo_base;id_hablante_base;genero_base;manipulado;tipo_splicing;inicio_insercion_s;fin_insercion_s;archivo_segmento;id_hablante_segmento;inicio_segmento_s;fin_segmento_s;duracion_s;frecuencia_muestreo;semilla
+H006_8297_clean;H006_8297_clean.wav;H006_8297;8297;;0;none;;;;;;;42.215;16000;42
+H006_8297_cross_speaker;H006_8297_cross_speaker.wav;H006_8297;8297;;1;cross_speaker;35.457;37.127;;777.0;;;43.885;16000;42
+H006_8297_cross_speaker_ruido;H006_8297_cross_speaker_ruido.wav;H006_8297;8297;;1;cross_speaker_ruido;17.993;19.663;;777.0;;;43.885;16000;42
+H010_6241_clean;H010_6241_clean.wav;H010_6241;6241;;0;none;;;;;;;29.04;16000;42
+H010_6241_cross_speaker;H010_6241_cross_speaker.wav;H010_6241;6241;;1;cross_speaker;24.378;26.498;;251.0;;;31.161;16000;42
+H010_6241_cross_speaker_ruido;H010_6241_cross_speaker_ruido.wav;H010_6241;6241;;1;cross_speaker_ruido;10.02;12.141;;251.0;;;31.161;16000;42
+H018_6313_clean;H018_6313_clean.wav;H018_6313;6313;;0;none;;;;;;;37.545;16000;42
+H018_6313_cross_speaker;H018_6313_cross_speaker.wav;H018_6313;6313;;1;cross_speaker;18.027;19.709;;777.0;;;39.227;16000;42
+H018_6313_cross_speaker_ruido;H018_6313_cross_speaker_ruido.wav;H018_6313;6313;;1;cross_speaker_ruido;33.452;35.133;;777.0;;;39.227;16000;42
+H022_2412_clean;H022_2412_clean.wav;H022_2412;2412;;0;none;;;;;;;30.605;16000;42
+H022_2412_cross_speaker;H022_2412_cross_speaker.wav;H022_2412;2412;;1;cross_speaker;3.842;5.581;;652.0;;;32.344;16000;42
+H022_2412_cross_speaker_ruido;H022_2412_cross_speaker_ruido.wav;H022_2412;2412;;1;cross_speaker_ruido;24.886;26.624;;652.0;;;32.344;16000;42

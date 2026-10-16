@@ -1,0 +1,18 @@
+Evaluación por archivo SIN fuga de datos (out-of-fold, GroupKFold por archivo_base)
+==============================================================================
+
+Cada archivo se puntúa con un modelo que no vio su audio base. Comparar estas
+cifras con las del experimento in-sample (evaluacion_umbrales_por_archivo_borde.csv)
+permite cuantificar el optimismo de la evaluación in-sample.
+
+ threshold  accuracy  precision   recall       f1  tn  fp  fn  tp  localizados  total_manipulados  tasa_localizacion
+      0.30  0.666667   0.666667 1.000000 0.800000   0  21   0  42           32                 42           0.761905
+      0.35  0.666667   0.666667 1.000000 0.800000   0  21   0  42           25                 42           0.595238
+      0.40  0.666667   0.698113 0.880952 0.778947   5  16   5  37           11                 42           0.261905
+      0.45  0.571429   0.702703 0.619048 0.658228  10  11  16  26            5                 42           0.119048
+      0.50  0.428571   0.800000 0.190476 0.307692  19   2  34   8            1                 42           0.023810
+      0.55  0.333333   0.000000 0.000000 0.000000  21   0  42   0            0                 42           0.000000
+      0.60  0.333333   0.000000 0.000000 0.000000  21   0  42   0            0                 42           0.000000
+      0.65  0.333333   0.000000 0.000000 0.000000  21   0  42   0            0                 42           0.000000
+      0.70  0.333333   0.000000 0.000000 0.000000  21   0  42   0            0                 42           0.000000
+      0.75  0.333333   0.000000 0.000000 0.000000  21   0  42   0            0                 42           0.000000

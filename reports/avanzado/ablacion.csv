@@ -1,0 +1,3 @@
+conjunto;n_features;accuracy;precision;recall;f1;roc_auc;pr_auc
+Solo base (36);36;0.5714;0.6923;0.6429;0.6667;0.5153;0.657
+Base + delta (108);108;0.4286;0.8;0.1905;0.3077;0.5918;0.7456

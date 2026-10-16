@@ -1,0 +1,17 @@
+COMPROBACIÓN EXPLORATORIA EN ESPAÑOL — detector cross-source sin reentrenar
+==============================================================================
+
+Host: A021_WhatsApp_Audio_2026-05-11_at_13.25.03_clean.wav | Donante del inserto: H006_8297_clean.wav
+Inserto: 2 s en t=10 s (ground truth [10, 12] s)
+Modelo: modelo_libri.joblib | umbral operativo 0.50 (calibrado en LibriSpeech)
+
+                                   condicion  tamper prediccion@0.50  n_intervalos                intervalos solape_con_gt  iou_mejor_intervalo
+             host limpio (español, WhatsApp)  0.5267      MANIPULADO             1              [16.0, 17.0]           NaN                  NaN
+       host + inserto otra fuente (solo voz)  0.5267      MANIPULADO             1              [18.0, 19.0]            no                0.000
+host + inserto otra fuente + ruido (entorno)  0.7707      MANIPULADO             2 [9.5, 13.0]; [18.0, 19.0]            sí                0.571
+
+Lectura: el empalme con cambio de entorno destaca sobre el fondo del host y
+se localiza en el tramo insertado, pese al cambio de idioma y de canal; el
+host limpio queda cerca del umbral, lo que indica que 0,50 no está calibrado
+para este dominio (un punto de operación razonable aquí sería 0,55-0,60).
+Análisis exploratorio con un único host; sin valor estadístico (Anexo B).

@@ -1,0 +1,9 @@
+perturbacion;deteccion;localizacion;tamper_medio
+Original;1.0;1.0;0.8328
+MP3 128k;0.7667;0.7167;0.6159
+MP3 96k;0.7667;0.7167;0.6169
+MP3 64k;0.7333;0.7167;0.6143
+Ruido 30 dB;1.0;0.7333;0.8295
+Ruido 20 dB;1.0;0.9833;0.8836
+Ruido 10 dB;1.0;1.0;0.9215
+Resample 8 kHz;0.0333;0.0;0.4379

@@ -1,0 +1,4 @@
+condicion;tamper;prediccion@0.50;n_intervalos;intervalos;solape_con_gt;iou_mejor_intervalo
+host limpio (español, WhatsApp);0.5267;MANIPULADO;1;[16.0, 17.0];;
+host + inserto otra fuente (solo voz);0.5267;MANIPULADO;1;[18.0, 19.0];no;0.0
+host + inserto otra fuente + ruido (entorno);0.7707;MANIPULADO;2;"[9.5, 13.0]; [18.0, 19.0]";sí;0.571

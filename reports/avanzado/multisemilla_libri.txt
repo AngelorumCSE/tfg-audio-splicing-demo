@@ -1,0 +1,15 @@
+VARIABILIDAD ENTRE SEMILLAS — detector cross-source (GroupKFold por hablante)
+======================================================================
+
+ semilla  roc_auc_archivo  pr_auc_archivo
+      42           0.7176          0.8949
+       7           0.7011          0.8912
+      13           0.7215          0.8969
+     101           0.6791          0.8814
+    2026           0.7219          0.8969
+
+ROC-AUC por archivo: media=0.7082  desv. tipica=0.0184
+PR-AUC por archivo:  media=0.8923  desv. tipica=0.0065
+
+La particion (GroupKFold por hablante) es determinista; la variabilidad
+procede del submuestreo de negativos y del Random Forest.
